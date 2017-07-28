@@ -1,0 +1,39 @@
+local flow = require "ludobits.m.flow"
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	flow(function()
+		while true do
+			flow.load("#menuproxy")
+			flow.until_message(hash("startgame"))
+			flow.unload("#menuproxy")
+			flow.load("#gameproxy")
+			msg.post("geometrywars:/game", "start", { ip = "127.0.0.1", port = 5000 })
+			flow.until_message(hash("gameover"), hash("disconnected"))
+			flow.unload("#gameproxy")
+		end
+	end)
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	flow.update(dt)
+end
+
+function on_message(self, message_id, message, sender)
+	flow.on_message(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

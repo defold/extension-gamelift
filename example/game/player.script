@@ -1,0 +1,103 @@
+local input = require "ludobits.m.input"
+local kinematic = require "ludobits.m.kinematic"
+
+
+go.property("max_linear_velocity", 2000)
+go.property("max_angular_velocity", 15)
+go.property("linear_acceleration", 2500)
+go.property("angular_acceleration", 25)
+
+go.property("remote", true)
+
+
+local LEFT = hash("left")
+local RIGHT = hash("right")
+local UP = hash("up")
+local DOWN = hash("down")
+local SHOOT = hash("shoot")
+
+local CONTACT_POINT_RESPONSE = hash("contact_point_response")
+local WALL = hash("wall")
+local ENEMY = hash("enemy")
+local PLAYER = hash("player")
+local BULLET = hash("bullet")
+
+
+local function clamp(val, min, max)
+	return math.max(math.min(val, max), min)
+end
+
+
+function init(self)
+	if not self.remote then
+		input.acquire()
+		msg.post("/broadsock", "register_gameobject", { id = go.get_id(), type = "player" })
+	end
+
+	self.correction = vmath.vector3()
+	self.linear_velocity = 0
+	self.angular_velocity = 0
+end
+
+function final(self)
+	if not self.remote then
+		msg.post("/broadsock", "unregister_gameobject", { id = go.get_id() })
+	end
+end
+
+function update(self, dt)
+	if not self.remote then
+		if input.is_pressed(LEFT) then
+			self.angular_velocity = self.angular_velocity + self.angular_acceleration * dt
+		elseif input.is_pressed(RIGHT) then
+			self.angular_velocity = self.angular_velocity - self.angular_acceleration * dt
+		end
+		
+		if input.is_pressed(UP) then
+			self.linear_velocity = self.linear_velocity + self.linear_acceleration * dt
+		elseif input.is_pressed(DOWN) then
+			self.linear_velocity = self.linear_velocity - self.linear_acceleration * dt
+		end
+		
+		if self.shoot_cooldown then
+			self.shoot_cooldown = self.shoot_cooldown - dt
+			if self.shoot_cooldown < 0 then
+				self.shoot_cooldown = nil
+			end
+		else
+			if input.is_pressed(SHOOT) then
+				self.shoot_cooldown = 0.2
+				factory.create("/factories#bullet", go.get_position(), go.get_rotation(), { remote = self.remote })
+			end
+		end
+	
+		self.angular_velocity = self.angular_velocity * 0.95
+		self.angular_velocity = clamp(self.angular_velocity, -self.max_angular_velocity, self.max_angular_velocity)
+		kinematic.rotate(math.rad(self.angular_velocity))
+	
+		self.linear_velocity = self.linear_velocity * 0.95
+		self.linear_velocity = clamp(self.linear_velocity, -self.max_linear_velocity, self.max_linear_velocity)
+		kinematic.forward(self.linear_velocity * dt)
+	
+		self.correction = vmath.vector3()
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if not self.remote then
+		if message_id == CONTACT_POINT_RESPONSE then
+			if message.group == WALL then
+				kinematic.handle_geometry_contact(self.correction, message.normal, message.distance)
+			end
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+	input.on_input(action_id, action)
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

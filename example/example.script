@@ -1,0 +1,70 @@
+local gamelift = require "aws-sdk.gamelift"
+
+function init(self)
+	gamelift.init({
+		scheme = "http",
+		endpoint_override = "127.0.0.1:8080",
+	})
+	local input = gamelift.CreateGameSessionInput(
+		gamelift.WholeNumber(10), -- max player sessions
+		gamelift.NonZeroAndMaxString("foobar"), -- name
+		nil, -- game properties
+		nil, -- IdempotencyToken
+		gamelift.FleetId("fleet-foobar") -- fleet id
+	)
+	gamelift.CreateGameSessionAsync(input, function(output, err)
+		if err then
+			print(err)
+			return
+		end
+		self.game_session = output.GameSession
+		pprint(self.game_session)
+	end)
+
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") and action.pressed then
+		if not self.game_session then
+			print("No game session")
+			return
+		end
+		
+		local input = gamelift.CreatePlayerSessionInput(
+			gamelift.NonZeroAndMaxString("playerid123"), -- PlayerId
+			self.game_session.GameSessionId, -- GameSessionId
+			gamelift.PlayerData("some player data")
+		)
+		gamelift.CreatePlayerSessionAsync(input, function(output, err)
+			if err then
+				print(err)
+				return
+			end
+			self.player_session = output.PlayerSession
+			pprint(self.player_session)
+		end)
+	end
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

@@ -1,0 +1,45 @@
+local kinematic = require "ludobits.m.kinematic"
+
+go.property("remote", true)
+
+
+local COLLISION_RESPONSE = hash("collision_response")
+local WALL = hash("wall")
+
+function init(self)
+	if not self.remote then
+		msg.post("/broadsock", "register_gameobject", { id = go.get_id(), type = "bullet" })
+	end
+end
+
+function final(self)
+	if not self.remote then
+		msg.post("/broadsock", "unregister_gameobject", { id = go.get_id() })
+	end
+end
+
+function update(self, dt)
+	if not self.remote then
+		kinematic.forward(850 * dt)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if not self.remote then
+		if message_id == COLLISION_RESPONSE then
+			if message.group == WALL then
+				go.delete()
+			end
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
