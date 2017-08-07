@@ -1,0 +1,27 @@
+go.property("remote", true)
+go.property("speed", 30)
+
+
+local WIDTH = tonumber(sys.get_config("display.width"))
+local HEIGHT = tonumber(sys.get_config("display.height"))
+
+local function roam(self)
+	local current = go.get_position()
+	local target = vmath.vector3(math.random(WIDTH), math.random(HEIGHT), 0)
+	local distance = vmath.length(current - target)
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, target, go.EASING_INOUTSINE, distance / self.speed, 0, roam)
+end
+
+function init(self)
+	if not self.remote then
+		msg.post("/broadsock", "register_gameobject", { id = go.get_id(), type = "black_hole" })
+		go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, 360, go.EASING_LINEAR, 8)
+		roam(self)
+	end
+end
+
+function final(self)
+	if not self.remote then
+		msg.post("/broadsock", "unregister_gameobject", { id = go.get_id() })
+	end
+end

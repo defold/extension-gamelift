@@ -21,3 +21,6 @@ bundle_identifier = com.britzl.defold.gamelift
 [osx]
 bundle_identifier = com.britzl.defold.gamelift
 
+[physics]
+debug = 0
+

@@ -2,10 +2,10 @@ local input = require "ludobits.m.input"
 local kinematic = require "ludobits.m.kinematic"
 
 
-go.property("max_linear_velocity", 2000)
-go.property("max_angular_velocity", 15)
+go.property("max_linear_velocity", 500)
+go.property("max_angular_velocity", 250)
 go.property("linear_acceleration", 2500)
-go.property("angular_acceleration", 25)
+go.property("angular_acceleration", 1500)
 
 go.property("remote", true)
 
@@ -67,13 +67,14 @@ function update(self, dt)
 		else
 			if input.is_pressed(SHOOT) then
 				self.shoot_cooldown = 0.2
-				factory.create("/factories#bullet", go.get_position(), go.get_rotation(), { remote = self.remote })
+				local rotation = go.get_rotation()
+				factory.create("/factories#bullet", go.get_position() + vmath.rotate(rotation, vmath.vector3(0, 15, 0)), rotation, { remote = self.remote })
 			end
 		end
 	
 		self.angular_velocity = self.angular_velocity * 0.95
 		self.angular_velocity = clamp(self.angular_velocity, -self.max_angular_velocity, self.max_angular_velocity)
-		kinematic.rotate(math.rad(self.angular_velocity))
+		kinematic.rotate(math.rad(self.angular_velocity * dt))
 	
 		self.linear_velocity = self.linear_velocity * 0.95
 		self.linear_velocity = clamp(self.linear_velocity, -self.max_linear_velocity, self.max_linear_velocity)

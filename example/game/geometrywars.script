@@ -3,9 +3,21 @@ local HEIGHT = tonumber(sys.get_config("display.height"))
 
 local BROADSOCK = msg.url("geometrywars:/broadsock#script")
 
+local ROAMER_DIED = hash("roamer_died")
+
 local function random_position()
 	return vmath.vector3(math.random(WIDTH), math.random(HEIGHT), 0)
 end
+
+
+local FACTORIES = {
+	player = { url = "factories#player" },
+	bullet = { url = "factories#bullet" },
+	black_hole = { url = "factories#black_hole" },
+	roamer = { url = "factories#roamer", respawn = true },
+	chaser = { url = "factories#chaser", respawn = true },
+}
+
 
 function init(self)
 	math.randomseed(os.time())
@@ -17,9 +29,21 @@ function on_message(self, message_id, message, sender)
 		msg.post(BROADSOCK, "connect", { ip = message.ip, port = message.port })
 	elseif message_id == hash("connected") then
 		if sender == BROADSOCK then
-			msg.post(BROADSOCK, "register_factory", { url = "factories#player", type = "player" })
-			msg.post(BROADSOCK, "register_factory", { url = "factories#bullet", type = "bullet" })
-			factory.create("factories#player", random_position(), nil, { remote = false })	
+			for type,data in pairs(FACTORIES) do
+				msg.post(BROADSOCK, "register_factory", { url = data.url, type = type })
+			end
+			
+			factory.create(FACTORIES.player.url, random_position(), nil, { remote = false })
+			factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
+			factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
+			factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
+			factory.create(FACTORIES.chaser.url, random_position(), nil, { remote = false })
+			self.black_hole_id = factory.create(FACTORIES.black_hole.url, random_position(), nil, { remote = false })
+		end
+	elseif message_id == hash("destroyed") then
+		local data = FACTORIES[message.type]
+		if data.respawn then
+			factory.create(data.url, go.get_position(self.black_hole_id), nil, { remote = false })
 		end
 	elseif message_id == hash("disconnected") then
 		if sender == BROADSOCK then

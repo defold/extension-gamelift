@@ -1,0 +1,62 @@
+go.property("remote", true)
+go.property("speed", 100)
+
+local WIDTH = tonumber(sys.get_config("display.width"))
+local HEIGHT = tonumber(sys.get_config("display.height"))
+
+local TRIGGER_RESPONSE = hash("trigger_response")
+
+local function roam(self, target)
+	local current = go.get_position()
+	target = target or vmath.vector3(math.random(WIDTH), math.random(HEIGHT), 0)
+	local distance = vmath.length(current - target)
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, target, go.EASING_LINEAR, distance / self.speed, 0, function()
+		roam(self)
+	end)
+end
+
+function init(self)
+	if not self.remote then
+		msg.post("/broadsock", "register_gameobject", { id = go.get_id(), type = "chaser" })
+		go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, 360, go.EASING_LINEAR, 8)
+		self.target = vmath.vector3(math.random(WIDTH), math.random(HEIGHT), 0)
+		roam(self)
+	end
+end
+
+function final(self)
+	if not self.remote then
+		msg.post("/broadsock", "unregister_gameobject", { id = go.get_id() })
+	end
+end
+
+function update(self, dt)
+	if self.remote then
+		return
+	end
+	
+	if self.target_id then
+		local pos = go.get_position()
+		local target = go.get_position(self.target_id)
+		local direction = vmath.normalize(target - pos)
+		go.set_position(pos + direction * self.speed * dt)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if self.remote then
+		return
+	end
+	
+	if message_id == TRIGGER_RESPONSE then
+		if message.enter then
+			-- start chasing the player
+			go.cancel_animations(".", "position")
+			self.target_id = message.other_id
+		else
+			-- player fled, roam again
+			self.target_id = nil
+			roam(self, go.get_position(message.other_id))
+		end
+	end
+end

@@ -1,7 +1,7 @@
 local kinematic = require "ludobits.m.kinematic"
 
 go.property("remote", true)
-
+go.property("speed", 850)
 
 local COLLISION_RESPONSE = hash("collision_response")
 local WALL = hash("wall")
@@ -20,7 +20,7 @@ end
 
 function update(self, dt)
 	if not self.remote then
-		kinematic.forward(850 * dt)
+		kinematic.forward(self.speed * dt)
 	end
 end
 
