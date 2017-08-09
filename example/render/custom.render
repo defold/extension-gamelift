@@ -1,0 +1,9 @@
+script: "/example/render/custom.render_script"
+materials {
+  name: "grid"
+  material: "/example/assets/materials/grid.material"
+}
+materials {
+  name: "composite"
+  material: "/example/assets/materials/composite.material"
+}

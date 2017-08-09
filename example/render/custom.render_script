@@ -1,0 +1,210 @@
+local function recreate_rt(rt, id, width, height)
+	if rt then
+		render.set_render_target_size(rt, width, height)
+	end
+	
+	local params = {
+		[render.BUFFER_COLOR_BIT] = {
+			width = width,
+			height = height,
+			format = render.FORMAT_RGBA
+		},
+		[render.BUFFER_DEPTH_BIT] = {
+			width = width,
+			height = height,
+			format = render.FORMAT_DEPTH
+		}
+	}
+	rt = render.render_target(id, params)
+	
+	return rt
+end
+
+local function render_to_rt(self, rt, material, clear, render_func)
+	if rt then
+		render.enable_render_target(rt)
+		local w = render.get_render_target_width(rt, render.BUFFER_COLOR_BIT)
+		local h = render.get_render_target_height(rt, render.BUFFER_COLOR_BIT)
+		render.set_viewport(0, 0, w, h)
+	else
+		render.set_viewport(0, 0, render.get_window_width(), render.get_window_height())
+	end
+	
+	if material then
+		render.enable_material(material)
+	end
+	
+	if clear then
+		render.clear({[render.BUFFER_COLOR_BIT] = self.clear_color, [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0})
+	end
+	
+	render_func(self)
+	
+	if material then
+		render.disable_material()
+	end
+	
+	if rt then
+		render.disable_render_target(rt)
+	end
+end
+
+local function recreate_render_targets(self)
+	--self.rts.comp = recreate_rt(nil, "comp", render.get_window_width(), render.get_window_height())
+    
+    -- TODO rts:
+    --    * diffuse
+    self.rts.diffuse = recreate_rt(nil, "diffuse", render.get_window_width(), render.get_window_height())
+    self.rts.normals = recreate_rt(nil, "normals", render.get_window_width(), render.get_window_height())
+    --    * normals
+    --    * light/bloom
+    --    * fluids?
+end
+
+function init(self)
+    self.tile_pred     = render.predicate({"tile"})
+    self.gui_pred      = render.predicate({"gui"})
+    self.text_pred     = render.predicate({"text"})
+    self.particle_pred = render.predicate({"particle"})
+    self.fspass_pred   = render.predicate({"fspass"})
+    self.normal_pred   = render.predicate({"normal"})
+
+    self.clear_color = vmath.vector4(0, 0, 0, 0)
+
+    self.view = vmath.matrix4()
+    
+    self.rts = {}
+    recreate_render_targets(self)
+end
+
+local function render_game(self)
+	render.set_view(self.view)
+
+    render.set_depth_mask(false)
+    render.disable_state(render.STATE_DEPTH_TEST)
+    render.disable_state(render.STATE_STENCIL_TEST)
+    render.enable_state(render.STATE_BLEND)
+    render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+    render.disable_state(render.STATE_CULL_FACE)
+
+    render.set_projection(vmath.matrix4_orthographic(0, render.get_width(), 0, render.get_height(), -1, 1))
+
+    render.draw(self.tile_pred)
+    render.draw(self.particle_pred)
+
+    render.set_view(vmath.matrix4())
+    render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width(), 0, render.get_window_height(), -1, 1))
+
+    render.enable_state(render.STATE_STENCIL_TEST)
+    render.draw(self.gui_pred)
+    render.draw(self.text_pred)
+    render.disable_state(render.STATE_STENCIL_TEST)
+end
+
+
+local function render_normals(self)
+	render.disable_state(render.STATE_CULL_FACE)
+	render.disable_state(render.STATE_DEPTH_TEST)
+	
+	render.set_view(self.view)
+    render.set_projection(vmath.matrix4_orthographic(0, render.get_width(), 0, render.get_height(), -1, 1))
+    render.draw(self.normal_pred)
+end
+
+local function render_fspass(self)
+	
+	
+	
+	render.set_depth_mask(false)
+	render.disable_state(render.STATE_DEPTH_TEST)
+    render.disable_state(render.STATE_STENCIL_TEST)
+    render.disable_state(render.STATE_CULL_FACE)
+    render.disable_state(render.STATE_BLEND)
+	
+	render.set_view(vmath.matrix4())
+    render.set_projection(vmath.matrix4_orthographic(-1, 1, -1, 1, -1, 1))
+	render.draw(self.fspass_pred)
+	
+	--[[
+	render.set_view(vmath.matrix4())
+	render.set_projection(vmath.matrix4_orthographic(-1, 1, -1, 1, -1, 1))
+	
+	render.draw(self.fspass_pred)
+	--]]
+end
+
+local function render_overlay(self)
+	render.set_view(self.view)
+
+    render.set_depth_mask(false)
+    render.disable_state(render.STATE_DEPTH_TEST)
+    render.disable_state(render.STATE_STENCIL_TEST)
+    render.enable_state(render.STATE_BLEND)
+    render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+    render.disable_state(render.STATE_CULL_FACE)
+
+    render.set_projection(vmath.matrix4_orthographic(0, render.get_width(), 0, render.get_height(), -1, 1))
+    render.draw_debug3d()
+
+    render.set_view(vmath.matrix4())
+    render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width(), 0, render.get_window_height(), -1, 1))
+    render.set_depth_mask(false)
+    render.draw_debug2d()
+end
+
+function update(self)
+    --render.set_depth_mask(true)
+    --render.set_stencil_mask(0xff)
+    --render.clear({[render.BUFFER_COLOR_BIT] = self.clear_color, [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0})
+	--render.set_viewport(0, 0, render.get_window_width(), render.get_window_height())
+	
+	-- PASS diffuse (regular materials)
+	self.clear_color = vmath.vector4(0, 0, 0, 0)
+	render_to_rt(self, self.rts.diffuse, "grid", true, render_fspass) -- background
+    render_to_rt(self, self.rts.diffuse, nil, false, render_game)
+    
+    --render.enable_state(render.STATE_BLEND)
+    --render.set_blend_func(render.BLEND_ONE, render.BLEND_ONE)
+    
+	--glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
+	--glBlendEquation(GL_FUNC_ADD);
+    self.clear_color = vmath.vector4(0.0, 0.0, 0.0, 0)
+    render.disable_state(render.STATE_BLEND)
+    
+    render.enable_texture(0, self.rts.diffuse, render.BUFFER_COLOR_BIT)
+    --render_to_rt(self, self.rts.normals, nil, true, render_normals)
+	render_to_rt(self, self.rts.normals, nil, true, render_fspass)
+    render.disable_texture(0, self.rts.diffuse)
+    
+    
+    render.enable_texture(1, self.rts.diffuse, render.BUFFER_COLOR_BIT)
+    render_to_rt(self, self.rts.normals, nil, false, render_normals)
+    render.disable_texture(1, self.rts.diffuse)
+    
+    render.enable_texture(0, self.rts.normals, render.BUFFER_COLOR_BIT)
+    render_to_rt(self, nil, nil, true, render_fspass)
+    render.disable_texture(0, self.rts.normals)
+    
+    --[[
+    render.enable_texture(0, self.rts.normals, render.BUFFER_COLOR_BIT)
+    render_to_rt(self, nil, nil, true, render_fspass)
+    render.disable_texture(0, self.rts.normals)
+    
+    render.enable_texture(0, self.rts.diffuse, render.BUFFER_COLOR_BIT)
+    render.enable_texture(1, self.rts.normals, render.BUFFER_COLOR_BIT)
+    render_to_rt(self, nil, "composite", true, render_fspass)
+    render.disable_texture(1, self.rts.normals)
+    render.disable_texture(0, self.rts.diffuse)
+    ]]
+    --render_to_rt(self, nil, nil, render_overlay)
+    --render_overlay(self)
+
+end
+
+function on_message(self, message_id, message)
+    if message_id == hash("set_view_projection") then
+        self.view = message.view
+    elseif message_id == hash("window_resized") then
+    	recreate_render_targets(self)
+    end
+end

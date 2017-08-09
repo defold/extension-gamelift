@@ -25,6 +25,315 @@ images {
 images {
   image: "/example/assets/images/light_mask.png"
 }
+images {
+  image: "/example/assets/images/normals/engine_normal3.png"
+}
+animations {
+  id: "engine_power"
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 20
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "engine_power2"
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "engine_power3"
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "engine_power4"
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "engine_power5"
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "engine_power6"
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "engine_power7"
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "engine_power8"
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "engine_power9"
+  images {
+    image: "/example/assets/images/normals/engine_normal9.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal1.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal2.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal3.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal4.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal5.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal6.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal7.png"
+  }
+  images {
+    image: "/example/assets/images/normals/engine_normal8.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

@@ -1,23 +1,8 @@
-components {
-  id: "roamer"
-  component: "/example/game/roamer.script"
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/example/assets/game.atlas\"\n"
-  "default_animation: \"roamer\"\n"
+  data: "tile_set: \"/example/assets/images/sparks.tilesource\"\n"
+  "default_animation: \"spark1\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
@@ -37,17 +22,16 @@ embedded_components {
   id: "collisionobject"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
-  "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
-  "mass: 0.0\n"
-  "friction: 0.1\n"
-  "restitution: 0.5\n"
-  "group: \"enemy\"\n"
-  "mask: \"player\"\n"
-  "mask: \"bullet\"\n"
-  "mask: \"spark\"\n"
+  "type: COLLISION_OBJECT_TYPE_DYNAMIC\n"
+  "mass: 1.0E-5\n"
+  "friction: 0.0\n"
+  "restitution: 0.0\n"
+  "group: \"spark\"\n"
+  "mask: \"enemy\"\n"
+  "mask: \"wall\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
-  "    shape_type: TYPE_SPHERE\n"
+  "    shape_type: TYPE_BOX\n"
   "    position {\n"
   "      x: 0.0\n"
   "      y: 0.0\n"
@@ -60,9 +44,11 @@ embedded_components {
   "      w: 1.0\n"
   "    }\n"
   "    index: 0\n"
-  "    count: 1\n"
+  "    count: 3\n"
   "  }\n"
-  "  data: 17.0\n"
+  "  data: 2.0615\n"
+  "  data: 7.9185\n"
+  "  data: 10.0\n"
   "}\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"

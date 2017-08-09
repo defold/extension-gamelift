@@ -1,0 +1,17 @@
+uniform mediump mat4 view_proj;
+
+// positions are in world space
+attribute mediump vec4 position;
+attribute mediump vec2 texcoord0;
+
+varying mediump vec2 var_texcoord0;
+varying mediump vec2 var_texcoord1;
+varying mediump float var_rotation;
+
+void main()
+{
+    gl_Position = view_proj * vec4(position.xy,0.0, 1.0);
+	var_rotation = position.z;
+    var_texcoord0 = texcoord0;
+	var_texcoord1 = position.xy * vec2(1.0 / 1136.0, 1.0 / 640.0);
+}
