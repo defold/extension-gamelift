@@ -1,0 +1,65 @@
+local TOUCH = hash("touch")
+
+function init(self)
+	self.visible = false
+	self.root = gui.get_node("bg")
+	self.title = gui.get_node("title")
+	self.body = gui.get_node("body")
+	self.action1 = gui.get_node("action1/button")
+	self.action2 = gui.get_node("action2/button")
+	
+	self.show_position = gui.get_position(self.root)
+	self.hide_position = self.show_position + vmath.vector3(0, 1000, 0)
+	
+	gui.set_position(self.root, self.hide_position)
+	gui.set_render_order(15)
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("show") then
+		self.sender = sender
+		gui.set_text(self.title, message.title)
+		gui.set_text(self.body, message.body)
+		gui.set_enabled(self.action1, message.action1 ~= nil)
+		gui.set_enabled(self.action2, message.action2 ~= nil)
+		if message.action1 then
+			self.action1_message_id = message.action1.message_id
+			gui.set_text(gui.get_node("action1/text"), message.action1.text)
+		end
+		if message.action2 then
+			self.action2_message_id = message.action2.message_id
+			gui.set_text(gui.get_node("action2/text"), message.action2.text)
+		end
+		if not self.visible then
+			msg.post(".", "acquire_input_focus")
+			gui.animate(self.root, gui.PROP_POSITION, self.show_position, gui.EASING_OUTQUAD, 0.5)
+			self.visible = true
+		end
+	elseif message_id == hash("hide") then
+		if self.visible then
+			msg.post(".", "release_input_focus")
+			gui.animate(self.root, gui.PROP_POSITION, self.hide_position, gui.EASING_INQUAD, 0.5)
+			self.visible = false
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == TOUCH and action.released then
+		if gui.is_enabled(self.action1) and gui.pick_node(self.action1, action.x, action.y) then
+			msg.post(self.sender, self.action1_message_id)
+		elseif gui.is_enabled(self.action2) and gui.pick_node(self.action2, action.x, action.y) then
+			msg.post(self.sender, self.action2_message_id)
+		end
+	end
+end
+
+function on_reload(self)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end

@@ -1,14 +1,26 @@
 local flow = require "ludobits.m.flow"
+local gamelift = require "aws-sdk.gamelift"
+local mock_gamelift = require "example.util.mock_gamelift"
+
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	
+	math.randomseed(os.time())
+
+	mock_gamelift.mock()
+	gamelift.init({
+		scheme = "http",
+		endpoint_override = "127.0.0.1:8080",
+	})
+
 	flow(function()
 		while true do
 			flow.load("#menuproxy")
-			flow.until_message(hash("startgame"))
+			local message_id, message = flow.until_message(hash("startgame"))
 			flow.unload("#menuproxy")
 			flow.load("#gameproxy")
-			msg.post("geometrywars:/game", "start", { ip = "127.0.0.1", port = 5000 })
+			msg.post("geometrywars:/game", "start", { ip = message.ip, port = message.port })
 			flow.until_message(hash("gameover"), hash("disconnected"))
 			flow.unload("#gameproxy")
 		end
