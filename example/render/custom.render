@@ -7,3 +7,7 @@ materials {
   name: "composite"
   material: "/example/assets/materials/composite.material"
 }
+materials {
+  name: "vectorstep"
+  material: "/example/assets/materials/vectorstep.material"
+}

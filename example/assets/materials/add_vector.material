@@ -1,7 +1,7 @@
-name: "normal"
-tags: "normal"
-vertex_program: "/example/assets/materials/normal.vp"
-fragment_program: "/example/assets/materials/normal.fp"
+name: "add_vector"
+tags: "add_vector"
+vertex_program: "/example/assets/materials/add_vector.vp"
+fragment_program: "/example/assets/materials/add_vector.fp"
 vertex_constants {
   name: "view_proj"
   type: CONSTANT_TYPE_VIEWPROJ
@@ -20,6 +20,16 @@ fragment_constants {
     y: 1.0
     z: 1.0
     w: 1.0
+  }
+}
+fragment_constants {
+  name: "rotation"
+  type: CONSTANT_TYPE_USER
+  value {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
   }
 }
 samplers {

@@ -13,6 +13,21 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "bulletfx"
+  component: "/example/assets/particlefx/bullet.particlefx"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    w: 6.123234E-17
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
