@@ -21,12 +21,17 @@ function init(self)
 		go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, 360, go.EASING_LINEAR, 8)
 		roam(self)
 	end
+	self.force_go = factory.create("/factories#force", vmath.vector3(0), vmath.quat(), {}, vmath.vector3(0.3))
+	msg.post(self.force_go, "set_parent", {parent_id = go.get_id(), keep_world_transform = 0})
+	local sprite_url = msg.url(nil, self.force_go, "sprite")
+	sprite.set_constant(sprite_url, "rotation", vmath.vector4(1, 1, 0, 0))
 end
 
 function final(self)
 	if not self.remote then
 		msg.post("/broadsock", "unregister_gameobject", { id = go.get_id() })
 	end
+	go.delete(self.force_go)
 end
 
 function on_message(self, message_id, message, sender)

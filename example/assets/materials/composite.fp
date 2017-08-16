@@ -30,7 +30,7 @@ void main()
 	vec2 norm_vec = unpack(normal);
 
 	vec2 color_norm = norm_vec * 0.5 + 0.5;
-	vec4 color_mod = vec4(norm_vec.xy, norm_vec.x + norm_vec.y, 0.0);
+	vec4 color_mod = vec4(norm_vec.xy*2.0, ((norm_vec.x) + (norm_vec.y))*2.0, 0.0);
 
 	//normal.xy = (normal.xy * 2.0) - 1.0;
 

@@ -1,7 +1,7 @@
 local function recreate_rt(rt, id, width, height, depth)
 	if rt then
 		render.set_render_target_size(rt, width, height)
-        return
+        return rt
 	end
 
 	local params = {
@@ -42,7 +42,7 @@ local function render_to_rt(self, rt, material, clear, render_func, constants)
 	if clear then
 		render.clear({[render.BUFFER_COLOR_BIT] = self.clear_color, [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0})
 	end
-
+	
 	render_func(self, constants)
 
 	if material then
@@ -64,12 +64,12 @@ local function clear_rt(rt, color)
 end
 
 local function recreate_render_targets(self)
-	--self.rts.comp = recreate_rt(nil, "comp", render.get_window_width(), render.get_window_height())
 
-    -- TODO rts:
-    --    * diffuse
+    -- rts:
+    -- diffuse - anything the normals can affect
     self.rts.diffuse = recreate_rt(self.rts.diffuse, "diffuse", render.get_window_width(), render.get_window_height())
-    --self.rts.vectors = {}
+
+    -- vectors - store normals/vectors (sub rts is to downsample vectors rts)
     if not self.rts.vectors then
         self.rts.vectors = {}
     end
@@ -79,11 +79,17 @@ local function recreate_render_targets(self)
     self.rts.vectors.input = recreate_rt(self.rts.vectors.input, "vectors1", vectors_w, vectors_h)
     self.rts.vectors.output = recreate_rt(self.rts.vectors.output, "vectors2", vectors_w, vectors_h)
     self.rts.vectors_sub = recreate_rt(self.rts.vectors_sub, "vectors_sub", vectors_w * vectors_sub_s, vectors_h * vectors_sub_s)
-    --    * normals
-    --    * light/bloom
-    --    * fluids?
+
+    -- composite and bloom - bloom will downsample composite
+    if self.bloom_enabled then
+    	self.rts.comp = recreate_rt(self.rts.comp, "comp", render.get_window_width(), render.get_window_height())
+    	local bloom_w = render.get_window_width() / 8
+    	local bloom_h = render.get_window_height() / 8
+    	self.rts.bloom = recreate_rt(self.rts.bloom, "bloom", bloom_w, bloom_h)
+    end
 
     self.clear_render_targets = false
+    self.needs_to_recreate_rts = false
     print("recreated render targets")
 end
 
@@ -115,10 +121,16 @@ function init(self)
 
     self.view = vmath.matrix4()
 
-    self.rts = {}
-    recreate_render_targets(self)
     
+
     self.vectorstep_constants = render.constant_buffer()
+    self.downsample_constants = render.constant_buffer()
+    
+    self.bloom_enabled = true
+    
+    self.rts = {}
+    self.needs_to_recreate_rts = true
+    recreate_render_targets(self)
 end
 
 local function render_game(self)
@@ -135,14 +147,6 @@ local function render_game(self)
 
     render.draw(self.tile_pred)
     render.draw(self.particle_pred)
-
-    render.set_view(vmath.matrix4())
-    render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width(), 0, render.get_window_height(), -1, 1))
-
-    render.enable_state(render.STATE_STENCIL_TEST)
-    render.draw(self.gui_pred)
-    render.draw(self.text_pred)
-    render.disable_state(render.STATE_STENCIL_TEST)
 end
 
 local function render_add_vectors(self)
@@ -160,40 +164,30 @@ local function render_add_vectors(self)
     render.draw(self.add_vector_pred)
 end
 
-local function render_normals(self)
-	--[[
-	render.disable_state(render.STATE_CULL_FACE)
-	render.disable_state(render.STATE_DEPTH_TEST)
-
-	render.set_view(self.view)
-    render.set_projection(vmath.matrix4_orthographic(0, render.get_width(), 0, render.get_height(), -1, 1))
-    render.draw(self.normal_pred)
-    ]]
-end
-
 local function render_fspass(self)
-
-
 
 	render.set_depth_mask(false)
 	render.disable_state(render.STATE_DEPTH_TEST)
     render.disable_state(render.STATE_STENCIL_TEST)
     render.disable_state(render.STATE_CULL_FACE)
-    render.disable_state(render.STATE_BLEND)
+    --render.disable_state(render.STATE_BLEND)
 
 	render.set_view(vmath.matrix4())
     render.set_projection(vmath.matrix4_orthographic(-1, 1, -1, 1, -1, 1))
 	render.draw(self.fspass_pred)
 
-	--[[
-	render.set_view(vmath.matrix4())
-	render.set_projection(vmath.matrix4_orthographic(-1, 1, -1, 1, -1, 1))
-
-	render.draw(self.fspass_pred)
-	--]]
 end
 
 local function render_overlay(self)
+	render.set_view(vmath.matrix4())
+    render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width(), 0, render.get_window_height(), -1, 1))
+
+	render.enable_state(render.STATE_BLEND)
+    render.enable_state(render.STATE_STENCIL_TEST)
+    render.draw(self.gui_pred)
+    render.draw(self.text_pred)
+    render.disable_state(render.STATE_STENCIL_TEST)
+    
 	render.set_view(self.view)
 
     render.set_depth_mask(false)
@@ -214,50 +208,53 @@ end
 
 local function vector_step(self)
 	-- PASS downsample vectors
-	
     render.disable_state(render.STATE_BLEND)
     render.enable_texture(0, self.rts.vectors.output, render.BUFFER_COLOR_BIT)
     render_to_rt(self, self.rts.vectors_sub, nil, true, render_fspass)
     render.disable_texture(0, self.rts.vectors.output)
-    
-    
+
+
+    -- PASS let vectors propagate to neighbour pixels
     local dx = 1/render.get_render_target_width(self.rts.vectors.input, render.BUFFER_COLOR_BIT)
     local dy = 1/render.get_render_target_height(self.rts.vectors.input, render.BUFFER_COLOR_BIT)
     self.vectorstep_constants.pdx = vmath.vector4(dx, dy, 0.0, 0.0)
-    
+
     render.disable_state(render.STATE_BLEND)
-    --render.set_blend_func(render.BLEND_ZERO, render.BLEND_ONE)
     pingpong(self.rts.vectors)
     render.enable_texture(0, self.rts.vectors.input, render.BUFFER_COLOR_BIT)
     render.enable_texture(1, self.rts.vectors_sub, render.BUFFER_COLOR_BIT)
     render_to_rt(self, self.rts.vectors.output, "vectorstep", true, render_fspass, self.vectorstep_constants)
     render.disable_texture(0, self.rts.vectors.input)
     render.disable_texture(1, self.rts.vectors_sub)
-    
+
 end
 
 function update(self)
+
+	if self.needs_to_recreate_rts then
+		recreate_render_targets(self)
+	end
 
     if not self.clear_render_targets then
         clear_rts(self)
         return
     end
 
-	-- PASS diffuse (regular materials)
+	-- PASS diffuse (only grid for now)
 	self.clear_color = vmath.vector4(0, 0, 0, 0)
 	render_to_rt(self, self.rts.diffuse, "grid", true, render_fspass) -- background
     --render_to_rt(self, self.rts.diffuse, nil, false, render_game)
 
     -- PASS add new vectors
-    
     pingpong(self.rts.vectors)
-    
+
     -- bring in last vectors frame
     render.disable_state(render.STATE_BLEND)
     render.enable_texture(0, self.rts.vectors.input, render.BUFFER_COLOR_BIT)
     render_to_rt(self, self.rts.vectors.output, nil, true, render_fspass)
     render.disable_texture(0, self.rts.vectors.input)
-    
+
+    -- apply new vectors
     render.enable_state(render.STATE_BLEND)
     render.set_blend_func(render.BLEND_ONE, render.BLEND_ONE)
     render.enable_texture(1, self.rts.vectors.input, render.BUFFER_COLOR_BIT)
@@ -265,32 +262,43 @@ function update(self)
     render.disable_texture(1, self.rts.vectors.input)
     render.disable_state(render.STATE_BLEND)
 
-    -- PASS composite to backbuffer
+    -- PASS composite to composite rt
     render.enable_texture(0, self.rts.diffuse, render.BUFFER_COLOR_BIT)
 	render.enable_texture(1, self.rts.vectors.output, render.BUFFER_COLOR_BIT)
-	--render.enable_texture(1, self.rts.vectors_sub, render.BUFFER_COLOR_BIT)
-    render_to_rt(self, nil, "composite", true, render_fspass)
+	local rt = nil
+	if self.bloom_enabled then
+    	rt = self.rts.comp
+    end
+    render_to_rt(self, rt, "composite", true, render_fspass)
     render.disable_texture(1, self.rts.vectors.output)
-    --render.disable_texture(1, self.rts.vectors_sub)
     render.disable_texture(0, self.rts.diffuse)
-    render_to_rt(self, nil, nil, false, render_game)
+    render_to_rt(self, rt, nil, false, render_game)
+
+    -- PASS downsample composite
+    if self.bloom_enabled then
+    	render.enable_texture(0, self.rts.comp, render.BUFFER_COLOR_BIT)
+    	local comp_w = 1/render.get_render_target_width(self.rts.bloom, render.BUFFER_COLOR_BIT)
+    	local comp_h = 1/render.get_render_target_height(self.rts.bloom, render.BUFFER_COLOR_BIT)
+    	render.enable_state(render.STATE_BLEND)
+    	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+    	render_to_rt(self, self.rts.bloom, "downsample_comp", false, render_fspass)
+    	render.disable_texture(0, self.rts.comp)
+    	render.disable_state(render.STATE_BLEND)
     
+
+		-- PASS comp + bloom to backbuffer
+		render.enable_texture(0, self.rts.comp, render.BUFFER_COLOR_BIT)
+		render.enable_texture(1, self.rts.bloom, render.BUFFER_COLOR_BIT)
+		render_to_rt(self, nil, "final", true, render_fspass)
+		render.disable_texture(1, self.rts.bloom)
+		render.disable_texture(0, self.rts.comp)
+    end
+
     -- PASS step vector iterations
     vector_step(self)
-
-    --[[
-    render.enable_texture(0, self.rts.normals, render.BUFFER_COLOR_BIT)
-    render_to_rt(self, nil, nil, true, render_fspass)
-    render.disable_texture(0, self.rts.normals)
-
-    render.enable_texture(0, self.rts.diffuse, render.BUFFER_COLOR_BIT)
-    render.enable_texture(1, self.rts.normals, render.BUFFER_COLOR_BIT)
-    render_to_rt(self, nil, "composite", true, render_fspass)
-    render.disable_texture(1, self.rts.normals)
-    render.disable_texture(0, self.rts.diffuse)
-    ]]
-    --render_to_rt(self, nil, nil, render_overlay)
-    --render_overlay(self)
+    
+    -- PASS render overlay (gui etc)
+    render_overlay(self)
 
 end
 
@@ -298,6 +306,7 @@ function on_message(self, message_id, message)
     if message_id == hash("set_view_projection") then
         self.view = message.view
     elseif message_id == hash("window_resized") then
-    	recreate_render_targets(self)
+    	--recreate_render_targets(self)
+    	self.needs_to_recreate_rts = true
     end
 end

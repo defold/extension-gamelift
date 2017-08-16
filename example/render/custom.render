@@ -11,3 +11,11 @@ materials {
   name: "vectorstep"
   material: "/example/assets/materials/vectorstep.material"
 }
+materials {
+  name: "downsample_comp"
+  material: "/example/assets/materials/downsample_comp.material"
+}
+materials {
+  name: "final"
+  material: "/example/assets/materials/final.material"
+}

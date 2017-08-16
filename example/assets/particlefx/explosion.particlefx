@@ -15,7 +15,7 @@ emitters {
     w: 1.0
   }
   tile_source: "/example/assets/images/sparks.tilesource"
-  animation: "spark1"
+  animation: "spark_white"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_DEFAULT
@@ -77,7 +77,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SPEED
     points {
       x: 0.0
-      y: 500.0
+      y: 300.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -87,7 +87,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SIZE
     points {
       x: 0.0
-      y: 10.0
+      y: 20.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -137,7 +137,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_ROTATION
     points {
       x: 0.0
-      y: 0.0
+      y: 360.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -188,10 +188,10 @@ emitters {
       t_y: 0.99740857
     }
     points {
-      x: 0.11320755
-      y: 0.99277455
-      t_x: 0.99418455
-      t_y: 0.10768964
+      x: 0.1114374
+      y: 3.4239419
+      t_x: 0.036359552
+      t_y: -0.99933875
     }
     points {
       x: 0.7112546
@@ -211,8 +211,8 @@ emitters {
     points {
       x: 0.0
       y: 0.0
-      t_x: 1.0
-      t_y: 0.0
+      t_x: 0.02457979
+      t_y: 0.99969786
     }
   }
   size_mode: SIZE_MODE_MANUAL
@@ -236,7 +236,7 @@ emitters {
     w: 1.0
   }
   tile_source: "/example/assets/images/sparks.tilesource"
-  animation: "spark2"
+  animation: "spark_white"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_DEFAULT
@@ -298,7 +298,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SPEED
     points {
       x: 0.0
-      y: 500.0
+      y: 300.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -308,7 +308,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SIZE
     points {
       x: 0.0
-      y: 10.0
+      y: 20.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -358,7 +358,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_ROTATION
     points {
       x: 0.0
-      y: 0.0
+      y: 360.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -410,9 +410,9 @@ emitters {
     }
     points {
       x: 0.11320755
-      y: 0.99277455
-      t_x: 0.99418455
-      t_y: 0.10768964
+      y: 3.3892243
+      t_x: 0.042372398
+      t_y: -0.9991019
     }
     points {
       x: 0.7112546
@@ -432,8 +432,8 @@ emitters {
     points {
       x: 0.0
       y: 0.0
-      t_x: 1.0
-      t_y: 0.0
+      t_x: 0.030959971
+      t_y: 0.9995206
     }
   }
   size_mode: SIZE_MODE_MANUAL
@@ -457,7 +457,7 @@ emitters {
     w: 1.0
   }
   tile_source: "/example/assets/images/sparks.tilesource"
-  animation: "spark3"
+  animation: "spark_white"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_DEFAULT
@@ -519,7 +519,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SPEED
     points {
       x: 0.0
-      y: 500.0
+      y: 300.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -529,7 +529,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SIZE
     points {
       x: 0.0
-      y: 10.0
+      y: 20.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -579,7 +579,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_ROTATION
     points {
       x: 0.0
-      y: 0.0
+      y: 360.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -631,9 +631,9 @@ emitters {
     }
     points {
       x: 0.11320755
-      y: 0.99277455
-      t_x: 0.99418455
-      t_y: 0.10768964
+      y: 3.3892243
+      t_x: 0.04086413
+      t_y: -0.9991647
     }
     points {
       x: 0.7112546
@@ -653,8 +653,8 @@ emitters {
     points {
       x: 0.0
       y: 0.0
-      t_x: 1.0
-      t_y: 0.0
+      t_x: 0.034125064
+      t_y: 0.99941754
     }
   }
   size_mode: SIZE_MODE_MANUAL

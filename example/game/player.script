@@ -33,7 +33,7 @@ local function spawn_world_spark(self)
 	local r = go.get_rotation()
 	local rot_offset = vmath.quat_rotation_z((math.random() - 0.5) * 0.5)
 	r = r * rot_offset
-	local spark = factory.create("#spark_factory", go.get_world_position(), r, {}, vmath.vector3(0.5))
+	local spark = factory.create("#spark_factory", go.get_world_position(), r, {}, vmath.vector3(0.8))
 	local spark_sprite = msg.url(nil, spark, "sprite")
 	local spark_co = msg.url(nil, spark, "collisionobject")
 	local force = vmath.vector3(0, -10000, 0)
