@@ -98,6 +98,8 @@ local function clear_rts(self)
     clear_rt(self.rts.vectors.input, vmath.vector4(0.5,0.5,0.5,0.5))
     clear_rt(self.rts.vectors.output, vmath.vector4(0.5,0.5,0.5,0.5))
     clear_rt(self.rts.vectors_sub, vmath.vector4(0,0,0,0))
+    clear_rt(self.rts.comp, vmath.vector4(0.0))
+    clear_rt(self.rts.bloom, vmath.vector4(0.0))
     self.clear_render_targets = true
     print("cleared render targets")
 end
