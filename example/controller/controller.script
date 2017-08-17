@@ -20,7 +20,7 @@ function init(self)
 			local message_id, message = flow.until_message(hash("startgame"))
 			flow.unload("#menuproxy")
 			flow.load("#gameproxy")
-			msg.post("geometrywars:/game", "start", { ip = message.ip, port = message.port })
+			msg.post("geometrywars:/game", "connect", { ip = message.ip, port = message.port, player_session_id = message.player_session_id })
 			flow.until_message(hash("gameover"), hash("disconnected"))
 			flow.unload("#gameproxy")
 		end

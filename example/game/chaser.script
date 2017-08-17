@@ -37,9 +37,14 @@ function update(self, dt)
 	
 	if self.target_id then
 		local pos = go.get_position()
-		local target = go.get_position(self.target_id)
-		local direction = vmath.normalize(target - pos)
-		go.set_position(pos + direction * self.speed * dt)
+		local ok, target = pcall(go.get_position, self.target_id)
+		if ok then
+			local direction = vmath.normalize(target - pos)
+			go.set_position(pos + direction * self.speed * dt)
+		else
+			self.target_id = nil
+			roam(self)
+		end
 	end
 end
 

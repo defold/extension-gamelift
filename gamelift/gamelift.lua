@@ -4,21 +4,64 @@ local gamelift = require "aws-sdk.gamelift"
 local M = {}
 
 
-function M.list_aliases(cb, args)
-	gamelift.ListAliasesAsync(ListAliasesInput,cb)
+function M.list_aliases(args)
+	assert(args, "You must provide a table of arguments (can be empty)")
+	local input = gamelift.ListAliasesInput(
+		args.NextToken,
+		args.Limit,
+		args.Name,
+		args.RoutingStrategyType)
+	return gamelift.ListAliasesSync(input)
 end
 
-function M.search_game_sessions(cb, args)
+function M.search_game_sessions(args)
 	assert(args, "You must provide a table of arguments (can be empty)")
-	assert(args.fleet_id or args.alias_id, "You must provide either a fleet_id or an alias_id")
+	assert(args.FleetId or args.AliasId, "You must provide either a FleetId or an AliasId")
+	local input = gamelift.SearchGameSessionsInput(
+		args.FilterExpression,
+		args.SortExpression,
+		args.FleetId,
+		args.Limit,
+		args.NextToken,
+		args.AliasId)
+	return gamelift.SearchGameSessionsSync(input)
+end
 
-	local input = gamelift.SearchGameSessionsInput(args.filter, args.sort, args.fleet_id, args.limit, args.next_token, args.alias_id)
+function M.describe_game_sessions(args)
+	assert(args, "You must provide a table of arguments (can be empty)")
+	local input = gamelift.DescribeGameSessionsInput(
+		args.Limit,
+		args.GameSessionId,
+		args.StatusFilter,
+		args.FleetId,
+		args.NextToken,
+		args.AliasId)
+	return gamelift.DescribeGameSessionsSync(input)
+end
 
-	gamelift.SearchGameSessionsAsync(input, function(response, error_message)
-		local SearchGameSessionsOutput = response
-		local GameSessionList = SearchGameSessionsOutput.GameSessions
-		cb(GameSessionList, error_message)
-	end)
+function M.create_game_session(args)
+	assert(args, "You must provide a table of arguments (can be empty)")
+	assert(args.FleetId or args.AliasId, "You must provide either a FleetId or an AliasId")
+	local input = gamelift.CreateGameSessionInput(
+		args.MaximumPlayerSessionCount,
+		args.Name,
+		args.GameProperties,
+		args.IdempotencyToken,
+		args.FleetId,
+		args.CreatorId,
+		args.GameSessionId,
+		args.AliasId)
+	return gamelift.CreateGameSessionSync(input)
+end
+
+
+function M.join_game_session(args)
+	assert(args, "You must provide a table of arguments (can be empty)")
+	local input = gamelift.CreatePlayerSessionInput(
+		args.PlayerId,
+		args.GameSessionId,
+		args.PlayerData)
+	return gamelift.CreatePlayerSessionSync(input)
 end
 
 

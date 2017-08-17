@@ -24,22 +24,41 @@ function init(self)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("start") then
+	if message_id == hash("connect") then
 		self.controller = sender
+		self.session = {
+			ip = message.ip,
+			port = message.port,
+			player_session_id = message.player_session_id,
+		}
+
 		msg.post(BROADSOCK, "connect", { ip = message.ip, port = message.port })
 	elseif message_id == hash("connected") then
 		if sender == BROADSOCK then
 			for type,data in pairs(FACTORIES) do
 				msg.post(BROADSOCK, "register_factory", { url = data.url, type = type })
 			end
-			
-			factory.create(FACTORIES.player.url, random_position(), nil, { remote = false })
-			factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
-			factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
-			factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
-			factory.create(FACTORIES.chaser.url, random_position(), nil, { remote = false })
-			self.black_hole_id = factory.create(FACTORIES.black_hole.url, random_position(), nil, { remote = false })
+			if self.session.player_session_id then
+				msg.post(BROADSOCK, "send_message", { "GL_CLAIM_PLAYER_SESSION", self.session.player_session_id })
+			else
+				msg.post("#", "start")
+			end
 		end
+	elseif message_id == hash("event") then
+		if sender == BROADSOCK then
+			if message.event == "GL_CLAIM_PLAYER_SESSION_SUCCESS" then
+				msg.post("#", "start")
+			elseif message.event == "GL_CLAIM_PLAYER_SESSION_FAILED" then
+				msg.post(self.controller, "disconnected")
+			end
+		end
+	elseif message_id == hash("start") then
+		factory.create(FACTORIES.player.url, random_position(), nil, { remote = false })
+		factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
+		factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
+		factory.create(FACTORIES.roamer.url, random_position(), nil, { remote = false })
+		factory.create(FACTORIES.chaser.url, random_position(), nil, { remote = false })
+		self.black_hole_id = factory.create(FACTORIES.black_hole.url, random_position(), nil, { remote = false })
 	elseif message_id == hash("destroyed") then
 		local data = FACTORIES[message.type]
 		if data.respawn then

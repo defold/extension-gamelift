@@ -114,8 +114,8 @@ function M.mock()
 					"_AliasArn",
 					os.date(os.time() - 1000), -- created
 					os.date(), -- updated
-					gamelift.RoutingStrategy(fleet_id, "_Message", "_Type"),
-					alias_id,
+					gamelift.RoutingStrategy(M.fleet_id, "_Message", "_Type"),
+					M.alias_id,
 					"_Description")
 			}
 		}
