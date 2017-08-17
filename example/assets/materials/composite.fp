@@ -31,6 +31,9 @@ void main()
 
 	vec2 color_norm = norm_vec * 0.5 + 0.5;
 	vec4 color_mod = vec4(norm_vec.xy*2.0, ((norm_vec.x) + (norm_vec.y))*2.0, 0.0);
+	color_mod = vec4(abs(color_mod.r) + abs(color_mod.g) + abs(color_mod.b)) / 3.0;
+	color_mod = color_mod * vec4(2.4, 0.4, 0.4, 0.0);
+	color_mod *= 0.8;
 
 	//normal.xy = (normal.xy * 2.0) - 1.0;
 

@@ -22,7 +22,7 @@ local ENEMY = hash("enemy")
 local PLAYER = hash("player")
 local BULLET = hash("bullet")
 
-local SPARK_COLORS = {hash("spark1"), hash("spark2"), hash("spark3")}
+local SPARK_COLORS = {hash("spark1"), hash("spark1"), hash("spark1")}
 
 local function clamp(val, min, max)
 	return math.max(math.min(val, max), min)

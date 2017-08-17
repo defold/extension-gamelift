@@ -236,7 +236,7 @@ emitters {
     w: 1.0
   }
   tile_source: "/example/assets/images/sparks.tilesource"
-  animation: "spark2"
+  animation: "spark1"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_INITIAL_DIRECTION
@@ -457,7 +457,7 @@ emitters {
     w: 1.0
   }
   tile_source: "/example/assets/images/sparks.tilesource"
-  animation: "spark3"
+  animation: "spark1"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_INITIAL_DIRECTION

@@ -20,9 +20,12 @@ void main()
     */
     vec4 p = texture2D(tex0, var_texcoord0.xy);
 	float d = (p.r + p.g + p.b) / 3.0;
-	d *= d*10.0;
-	//vec3 c = vec3(d);
-	vec3 c = vec3(p.rgb*d);
-    gl_FragColor = vec4(c, 0.05);
+	vec3 c = vec3(0.0);
+	if (d > 0.5) {
+		d *= d*10.0;
+		//vec3 c = vec3(d);
+		c = vec3(p.rgb*d);
+	}
+    gl_FragColor = vec4(c, 0.1);
 }
 
