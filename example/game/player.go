@@ -13,6 +13,21 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "engine"
+  component: "/example/assets/particlefx/engine.particlefx"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    w: 6.123234E-17
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
@@ -129,6 +144,23 @@ embedded_components {
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
   "locked_rotation: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "spark_factory"
+  type: "factory"
+  data: "prototype: \"/example/game/spark.go\"\n"
   ""
   position {
     x: 0.0

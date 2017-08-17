@@ -4,6 +4,7 @@ dependencies = https://github.com/britzl/ludobits/archive/dev/improvedflow.zip, 
 
 [bootstrap]
 main_collection = /example/controller/controller.collectionc
+render = /example/render/custom.renderc
 
 [input]
 game_binding = /input/game.input_bindingc
@@ -22,5 +23,9 @@ bundle_identifier = com.britzl.defold.gamelift
 bundle_identifier = com.britzl.defold.gamelift
 
 [physics]
-debug = 0
+gravity_y = 0.0
+scale = 1.0
+
+[sprite]
+max_count = 1024
 

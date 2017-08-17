@@ -22,11 +22,42 @@ local ENEMY = hash("enemy")
 local PLAYER = hash("player")
 local BULLET = hash("bullet")
 
+local SPARK_COLORS = {hash("spark1"), hash("spark1"), hash("spark1")}
 
 local function clamp(val, min, max)
 	return math.max(math.min(val, max), min)
 end
 
+local function spawn_world_spark(self)
+	--spark_factory
+	local r = go.get_rotation()
+	local rot_offset = vmath.quat_rotation_z((math.random() - 0.5) * 0.5)
+	r = r * rot_offset
+	local spark = factory.create("#spark_factory", go.get_world_position(), r, {}, vmath.vector3(0.8))
+	local spark_sprite = msg.url(nil, spark, "sprite")
+	local spark_co = msg.url(nil, spark, "collisionobject")
+	local force = vmath.vector3(0, -10000, 0)
+	force = vmath.rotate(r, force)
+	
+	local spark_anim = SPARK_COLORS[math.random(1, #SPARK_COLORS)]
+	msg.post(spark_sprite, "play_animation",  {id = spark_anim})
+	
+	msg.post(spark_co, "apply_force", {force = force, position = go.get_world_position()})
+	go.animate(spark_sprite, "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2, 0, function(self)
+		go.delete(spark)
+	end)
+end
+
+local function toggle_engine(self, on)
+	if self.engine_on ~= on then
+		self.engine_on = on
+		if on then
+			particlefx.play("#engine")
+		else
+			particlefx.stop("#engine")
+		end
+	end
+end
 
 function init(self)
 	if not self.remote then
@@ -37,6 +68,15 @@ function init(self)
 	self.correction = vmath.vector3()
 	self.linear_velocity = 0
 	self.angular_velocity = 0
+	
+	self.last_position = vmath.vector3(0)
+	
+	-- TMP
+	self.world_spark_t = 0.2
+	--particlefx.play("#engine")
+	--msg.post("@system:", "toggle_profile")
+	self.engine_force_go = factory.create("/factories#force", vmath.vector3(0), vmath.quat(), {}, vmath.vector3(0.3))
+	msg.post(self.engine_force_go, "set_parent", {parent_id = go.get_id(), keep_world_transform = 0})
 end
 
 function final(self)
@@ -46,11 +86,42 @@ function final(self)
 end
 
 function update(self, dt)
+	
+	-- update rotation information for engine force)
+	local p = go.get_position()
+	local dx = self.last_position.x - p.x
+	local dy = self.last_position.y - p.y
+	self.last_position = p
+	local q = go.get_rotation()
+	local angle = 2 * math.acos(q.w)
+	local t = math.sqrt(1-q.w*q.w)
+	if (t ~= 0) then
+		z = q.z / t
+		local r = z*angle
+		local sprite_url = msg.url(nil, self.engine_force_go, "sprite")
+		sprite.set_constant(sprite_url, "rotation", vmath.vector4(r, dx, dy, 0))
+	end
+	
+	
+	if self.engine_on then
+		self.world_spark_t = self.world_spark_t - dt
+		if self.world_spark_t <= 0 then
+			self.world_spark_t = 0.02
+			spawn_world_spark(self)
+		end
+	end
+	
 	if not self.remote then
 		if input.is_pressed(LEFT) then
 			self.angular_velocity = self.angular_velocity + self.angular_acceleration * dt
 		elseif input.is_pressed(RIGHT) then
 			self.angular_velocity = self.angular_velocity - self.angular_acceleration * dt
+		end
+		
+		if input.is_pressed(UP) then
+			toggle_engine(self, true)
+		else
+			toggle_engine(self, false)
 		end
 		
 		if input.is_pressed(UP) then

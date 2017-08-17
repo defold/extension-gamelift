@@ -44,6 +44,7 @@ embedded_components {
   "group: \"enemy\"\n"
   "mask: \"player\"\n"
   "mask: \"bullet\"\n"
+  "mask: \"spark\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_SPHERE\n"

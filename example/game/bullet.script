@@ -10,12 +10,28 @@ function init(self)
 	if not self.remote then
 		msg.post("/broadsock", "register_gameobject", { id = go.get_id(), type = "bullet" })
 	end
+	
+	particlefx.play("#bulletfx")
+	
+	self.force_go = factory.create("/factories#force", vmath.vector3(0), vmath.quat(), {}, vmath.vector3(0.2))
+	msg.post(self.force_go, "set_parent", {parent_id = go.get_id(), keep_world_transform = 0})
+	
+	local q = go.get_rotation()
+	local angle = 2 * math.acos(q.w)
+	local t = math.sqrt(1-q.w*q.w)
+	if (t ~= 0) then
+		z = q.z / t
+		local r = z*angle
+		local sprite_url = msg.url(nil, self.force_go, "sprite")
+		sprite.set_constant(sprite_url, "rotation", vmath.vector4(r, 100, 0, 0))
+	end
 end
 
 function final(self)
 	if not self.remote then
 		msg.post("/broadsock", "unregister_gameobject", { id = go.get_id() })
 	end
+	go.delete(self.force_go)
 end
 
 function update(self, dt)
