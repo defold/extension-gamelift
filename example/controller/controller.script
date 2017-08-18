@@ -8,10 +8,11 @@ function init(self)
 	
 	math.randomseed(os.time())
 
-	mock_gamelift.mock()
+	--mock_gamelift.mock()
 	gamelift.init({
-		scheme = "http",
-		endpoint_override = "127.0.0.1:8080",
+		scheme = "https",
+		region = "eu-central-1",
+		--endpoint_override = "127.0.0.1:8080",
 	})
 
 	flow(function()
