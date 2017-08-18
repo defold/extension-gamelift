@@ -15,9 +15,21 @@ end
 
 local function sleep(seconds)
 	local co = coroutine.running()
-	timer.seconds(seconds, function()
-		coroutine.resume(co)
-	end)
+	if timer then
+		timer.seconds(seconds, function()
+			coroutine.resume(co)
+		end)
+	else
+		local pos = gui
+		gui.animate(
+			gui.get_node("dummy"),
+			gui.PROP_POSITION,
+			vmath.vector3(0),
+			gui.EASING_LINEAR,
+			seconds, 0, function()
+				coroutine.resume(co)
+			end)
+	end
 	coroutine.yield()
 end
 
