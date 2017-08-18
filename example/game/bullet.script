@@ -31,7 +31,9 @@ function final(self)
 	if not self.remote then
 		msg.post("/broadsock", "unregister_gameobject", { id = go.get_id() })
 	end
-	go.delete(self.force_go)
+	pcall(function()
+		go.delete(self.force_go)
+	end)
 end
 
 function update(self, dt)
