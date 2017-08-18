@@ -59,7 +59,7 @@ function on_message(self, message_id, message, sender)
 				msg.post("#", "start")
 			end
 		end
-	elseif message_id == hash("event") then
+	elseif message_id == hash("message") then
 		if sender == BROADSOCK then
 			if message.event == "GL_CLAIM_PLAYER_SESSION_SUCCESS" then
 				msg.post("#", "start")
