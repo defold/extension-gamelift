@@ -1,4 +1,11 @@
 local gamelift = require "aws-sdk.gamelift"
+local aws_config = require "aws-sdk.core.config"
+
+function aws_config.http_request(uri, method, headers, post_data, callback)
+	http.request(uri, method, function(_, _, response)
+		callback(response)
+	end, headers, post_data)
+end
 
 
 local M = {}
