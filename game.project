@@ -29,3 +29,6 @@ scale = 1.0
 [sprite]
 max_count = 1024
 
+[aws]
+access_key = AKIAJ6I2YP7DPVMAVCPQ
+secret_access_key = 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
