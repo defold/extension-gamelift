@@ -1,7 +1,7 @@
 script: "/example/menu/menu.gui_script"
 fonts {
-  name: "silkscreen"
-  font: "/example/assets/fonts/silkscreen.font"
+  name: "geo"
+  font: "/example/assets/fonts/geo.font"
 }
 textures {
   name: "ui"
@@ -72,7 +72,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 100.0
+    x: 200.0
     y: 40.0
     z: 0.0
     w: 1.0
@@ -85,7 +85,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "main/space"
+  texture: "main/transparent1px"
   id: "start_game/button"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -127,15 +127,15 @@ nodes {
     w: 1.0
   }
   size {
-    x: 90.0
+    x: 190.0
     y: 100.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.49019608
+    y: 0.87058824
+    z: 0.96862745
     w: 1.0
   }
   type: TYPE_TEXT
@@ -230,7 +230,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 600.0
+    x: 1000.0
     y: 60.0
     z: 0.0
     w: 1.0
@@ -243,7 +243,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "ui/space"
+  texture: "ui/geo_pane"
   id: "game_session_proto/bg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -253,10 +253,10 @@ nodes {
   layer: "below"
   inherit_alpha: true
   slice9 {
-    x: 4.0
-    y: 4.0
-    z: 4.0
-    w: 4.0
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
   }
   clipping_mode: CLIPPING_MODE_NONE
   clipping_visible: true
@@ -268,7 +268,7 @@ nodes {
 }
 nodes {
   position {
-    x: -286.768
+    x: -472.991
     y: 0.0
     z: 0.0
     w: 1.0
@@ -292,9 +292,9 @@ nodes {
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.49019608
+    y: 0.87058824
+    z: 0.96862745
     w: 1.0
   }
   type: TYPE_TEXT
@@ -331,7 +331,7 @@ nodes {
 }
 nodes {
   position {
-    x: 0.0
+    x: -25.394
     y: 0.0
     z: 0.0
     w: 1.0
@@ -355,9 +355,9 @@ nodes {
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.49019608
+    y: 0.87058824
+    z: 0.96862745
     w: 1.0
   }
   type: TYPE_TEXT
@@ -367,7 +367,7 @@ nodes {
   id: "game_session_proto/players"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
-  pivot: PIVOT_CENTER
+  pivot: PIVOT_W
   outline {
     x: 1.0
     y: 1.0
@@ -394,7 +394,62 @@ nodes {
 }
 nodes {
   position {
-    x: 239.68
+    x: -30.527
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 90.0
+    w: 1.0
+  }
+  scale {
+    x: 0.75
+    y: 0.75
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 64.0
+    y: 64.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 0.49019608
+    y: 0.87058824
+    z: 0.96862745
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "ui/player"
+  id: "game_session_proto/playericon"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_FIT
+  parent: "game_session_proto/players"
+  layer: ""
+  inherit_alpha: true
+  slice9 {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 454.471
     y: 0.0
     z: 0.0
     w: 1.0
@@ -452,7 +507,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 100.0
+    x: 200.0
     y: 40.0
     z: 0.0
     w: 1.0
@@ -465,7 +520,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "main/space"
+  texture: "ui/transparent1px"
   id: "game_session_proto/join/button"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -507,15 +562,15 @@ nodes {
     w: 1.0
   }
   size {
-    x: 90.0
+    x: 190.0
     y: 100.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.9411765
+    y: 0.22745098
+    z: 0.5803922
     w: 1.0
   }
   type: TYPE_TEXT
@@ -553,7 +608,7 @@ nodes {
 nodes {
   position {
     x: 568.0
-    y: 591.745
+    y: 57.637
     z: 0.0
     w: 1.0
   }
@@ -609,7 +664,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 100.0
+    x: 200.0
     y: 40.0
     z: 0.0
     w: 1.0
@@ -622,7 +677,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "main/space"
+  texture: "main/transparent1px"
   id: "create_game/button"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -664,15 +719,15 @@ nodes {
     w: 1.0
   }
   size {
-    x: 90.0
+    x: 190.0
     y: 100.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.49019608
+    y: 0.87058824
+    z: 0.96862745
     w: 1.0
   }
   type: TYPE_TEXT
@@ -761,6 +816,68 @@ nodes {
   alpha: 1.0
   template_node_child: false
   size_mode: SIZE_MODE_MANUAL
+}
+nodes {
+  position {
+    x: 568.0
+    y: 592.617
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 0.6786058
+    y: 0.77092165
+    z: 0.7947144
+    w: 1.0
+  }
+  type: TYPE_TEXT
+  blend_mode: BLEND_MODE_ALPHA
+  text: "CHOOSE A GAME TO JOIN"
+  font: "geo"
+  id: "title"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  adjust_mode: ADJUST_MODE_FIT
+  line_break: false
+  layer: ""
+  inherit_alpha: true
+  alpha: 1.0
+  outline_alpha: 1.0
+  shadow_alpha: 1.0
+  template_node_child: false
+  text_leading: 1.0
+  text_tracking: 0.0
 }
 layers {
   name: "below"

@@ -10,7 +10,7 @@ uniform lowp vec4 light;
 void main()
 {
 	// Pick a coordinate to visualize in a grid
-	vec2 coord = gl_FragCoord.xy*0.05; //var_position.xy*50.0;
+	vec2 coord = gl_FragCoord.xy*0.02; //var_position.xy*50.0;
 
 	// Compute anti-aliased world-space grid lines
 	vec2 grid = abs(fract(coord - 0.5) - 0.5) / fwidth(coord);

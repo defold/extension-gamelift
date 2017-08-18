@@ -1,7 +1,7 @@
 script: ""
 fonts {
   name: "silkscreen"
-  font: "/example/assets/fonts/silkscreen.font"
+  font: "/example/assets/fonts/geo.font"
 }
 textures {
   name: "main"
@@ -33,7 +33,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 100.0
+    x: 200.0
     y: 40.0
     z: 0.0
     w: 1.0
@@ -46,7 +46,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "main/space"
+  texture: "main/transparent1px"
   id: "button"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -87,20 +87,20 @@ nodes {
     w: 1.0
   }
   size {
-    x: 90.0
+    x: 190.0
     y: 100.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.49019608
+    y: 0.87058824
+    z: 0.96862745
     w: 1.0
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "BUTTON TEXT"
+  text: "TEXT"
   font: "silkscreen"
   id: "text"
   xanchor: XANCHOR_NONE

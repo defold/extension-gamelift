@@ -1,7 +1,7 @@
 script: "/example/menu/popup.gui_script"
 fonts {
   name: "silkscreen"
-  font: "/example/assets/fonts/silkscreen.font"
+  font: "/example/assets/fonts/geo.font"
 }
 textures {
   name: "ui"
@@ -33,8 +33,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 350.0
-    y: 250.0
+    x: 500.0
+    y: 400.0
     z: 0.0
     w: 1.0
   }
@@ -46,7 +46,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "ui/space"
+  texture: "ui/geo_pane"
   id: "bg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -55,10 +55,10 @@ nodes {
   layer: "below"
   inherit_alpha: true
   slice9 {
-    x: 4.0
-    y: 4.0
-    z: 4.0
-    w: 4.0
+    x: 450.0
+    y: 0.0
+    z: 50.0
+    w: 50.0
   }
   clipping_mode: CLIPPING_MODE_NONE
   clipping_visible: true
@@ -70,7 +70,7 @@ nodes {
 nodes {
   position {
     x: 0.0
-    y: 100.584
+    y: 163.522
     z: 0.0
     w: 1.0
   }
@@ -93,9 +93,9 @@ nodes {
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.6784314
+    y: 0.77254903
+    z: 0.79607844
     w: 1.0
   }
   type: TYPE_TEXT
@@ -133,7 +133,7 @@ nodes {
 nodes {
   position {
     x: 0.0
-    y: 81.302
+    y: 131.503
     z: 0.0
     w: 1.0
   }
@@ -150,15 +150,15 @@ nodes {
     w: 1.0
   }
   size {
-    x: 340.0
+    x: 460.0
     y: 300.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.6784314
+    y: 0.77254903
+    z: 0.79607844
     w: 1.0
   }
   type: TYPE_TEXT
@@ -195,8 +195,8 @@ nodes {
 }
 nodes {
   position {
-    x: -100.0
-    y: -90.0
+    x: -140.0
+    y: -164.177
     z: 0.0
     w: 1.0
   }
@@ -253,7 +253,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 100.0
+    x: 200.0
     y: 40.0
     z: 0.0
     w: 1.0
@@ -266,7 +266,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "main/space"
+  texture: "main/transparent1px"
   id: "action1/button"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -308,15 +308,15 @@ nodes {
     w: 1.0
   }
   size {
-    x: 90.0
+    x: 190.0
     y: 100.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.49019608
+    y: 0.87058824
+    z: 0.96862745
     w: 1.0
   }
   type: TYPE_TEXT
@@ -354,8 +354,8 @@ nodes {
 }
 nodes {
   position {
-    x: 100.0
-    y: -90.0
+    x: 140.0
+    y: -164.177
     z: 0.0
     w: 1.0
   }
@@ -412,7 +412,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 100.0
+    x: 200.0
     y: 40.0
     z: 0.0
     w: 1.0
@@ -425,7 +425,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "main/space"
+  texture: "main/transparent1px"
   id: "action2/button"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -467,15 +467,15 @@ nodes {
     w: 1.0
   }
   size {
-    x: 90.0
+    x: 190.0
     y: 100.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.49019608
+    y: 0.87058824
+    z: 0.96862745
     w: 1.0
   }
   type: TYPE_TEXT
