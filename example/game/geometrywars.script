@@ -61,9 +61,9 @@ function on_message(self, message_id, message, sender)
 		end
 	elseif message_id == hash("message") then
 		if sender == BROADSOCK then
-			if message.event == "GL_CLAIM_PLAYER_SESSION_SUCCESS" then
+			if message.msg_id == "GL_CLAIM_PLAYER_SESSION_SUCCESS" then
 				msg.post("#", "start")
-			elseif message.event == "GL_CLAIM_PLAYER_SESSION_FAILED" then
+			elseif message.msg_id == "GL_CLAIM_PLAYER_SESSION_FAILED" then
 				msg.post(self.controller, "disconnected")
 			end
 		end
