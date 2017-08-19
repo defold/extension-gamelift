@@ -1,10 +1,16 @@
-local WIDTH = tonumber(sys.get_config("display.width"))
-local HEIGHT = tonumber(sys.get_config("display.height"))
+local logger = require "ludobits.m.logger"
+local log = logger.create("GEOMETRYWARS")
+
+
 
 local BROADSOCK = msg.url("geometrywars:/broadsock#script")
 
 local ROAMER_DIED = hash("roamer_died")
 
+
+
+local WIDTH = tonumber(sys.get_config("display.width"))
+local HEIGHT = tonumber(sys.get_config("display.height"))
 local function random_position()
 	return vmath.vector3(math.random(WIDTH), math.random(HEIGHT), 0)
 end
@@ -20,6 +26,7 @@ local FACTORIES = {
 
 
 function init(self)
+	log.d("init()")
 	math.randomseed(os.time())
 end
 
@@ -40,6 +47,7 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("connect") then
+		log.d("on_message() connect", message.ip, message.port, message.player_session_id)
 		self.controller = sender
 		self.session = {
 			ip = message.ip,

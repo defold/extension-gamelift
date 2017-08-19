@@ -1,7 +1,8 @@
 local gamelift = require "gamelift.gamelift"
 local player_id = require "gamelift.player_id"
-local flow = require "ludobits.m.flow"
+local logger = require "ludobits.m.logger"
 
+local log = logger.create("MENU")
 
 local function show_popup(title, body, action1, action2)
 	msg.post(".", "release_input_focus")
@@ -35,12 +36,14 @@ end
 
 
 local function create_game_session_and_wait_until_active(args)
+	log.d("create_game_session_and_wait_until_active")
 	local response, error_message = gamelift.create_game_session(args)
 	if error_message or response.GameSession.Status == "ERROR" then
 		return nil, error_message or "STATUS: ERROR"
 	end
 	local game_session = response.GameSession
 	while true do
+		log.d("create_game_session_and_wait_until_active - waiting until active or error")
 		local response, error_message = gamelift.describe_game_sessions({ GameSessionId = game_session.GameSessionId })
 		if error_message or #response.GameSessions == 0 or response.GameSessions[1].Status == "ERROR" then
 			return nil, error_message or "STATUS: ERROR"
@@ -93,6 +96,7 @@ function init(self)
 	gui.set_enabled(self.game_session_proto, false)
 
 	coroutine.wrap(function()
+		log.d("init - list aliases")
 		local response, error_message = gamelift.list_aliases({})
 		if error_message then
 			return
@@ -110,10 +114,6 @@ function init(self)
 	end)()
 end
 
-function final(self)
-	flow.stop()
-end
-
 function on_message(self, message_id, message, sender)
 	if message_id == hash("close_popup") then
 		hide_popup()
@@ -124,6 +124,7 @@ function on_input(self, action_id, action)
 	if action_id == hash("touch") and action.released then
 		for _,game in pairs(self.games) do
 			if gui.pick_node(game.nodes[hash("game_session_proto/join/button")], action.x, action.y) then
+				log.d("joining")
 				coroutine.wrap(function()
 					show_popup("JOINING", "Joining game. Please wait.", { text = "Cancel", message_id = "cancel_join_game_session" })
 					local response, error_message = gamelift.join_game_session({
@@ -133,6 +134,7 @@ function on_input(self, action_id, action)
 					if error_message then
 						show_popup("ERROR", "Unable to join game session", { text = "CLOSE", message_id = "close_popup" })
 					else
+						log.d("join success")
 						local server_ip = response.PlayerSession.IpAddress
 						local server_port = response.PlayerSession.Port
 						msg.post("controller:/controller", "startgame", {
@@ -148,7 +150,7 @@ function on_input(self, action_id, action)
 		end
 
 		if gui.pick_node(self.create_game, action.x, action.y) then
-			flow(function()
+			coroutine.wrap(function()
 				show_popup("CREATING GAME", "Creating a new game session. Please wait.", { text = "Cancel", message_id = "cancel_create_game_session" })
 				local session, error_message = create_game_session_and_wait_until_active({
 					CreatorId = self.player.id,
@@ -161,7 +163,7 @@ function on_input(self, action_id, action)
 				else
 					show_popup("SUCCESS", "Game session created", { text = "CLOSE", message_id = "close_popup" })
 				end
-			end)
+			end)()
 		elseif gui.pick_node(self.start_game, action.x, action.y) then
 			msg.post("controller:/controller", "startgame", { ip = "127.0.0.1", port = 5000 })
 		end
