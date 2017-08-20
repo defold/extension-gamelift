@@ -1,4 +1,4 @@
-local gamelift = require "gamelift.gamelift"
+local gamelift = require "aws-sdk.gamelift"
 local player_id = require "gamelift.player_id"
 local logger = require "ludobits.m.logger"
 
@@ -37,14 +37,15 @@ end
 
 local function create_game_session_and_wait_until_active(args)
 	log.d("create_game_session_and_wait_until_active")
-	local response, error_message = gamelift.create_game_session(args)
+	local response, error_message = gamelift.CreateGameSessionSync(gamelift.CreateGameSessionInput(args))
 	if error_message or response.GameSession.Status == "ERROR" then
 		return nil, error_message or "STATUS: ERROR"
 	end
 	local game_session = response.GameSession
+	local input = gamelift.DescribeGameSessionsInput({ GameSessionId = game_session.GameSessionId })
 	while true do
 		log.d("create_game_session_and_wait_until_active - waiting until active or error")
-		local response, error_message = gamelift.describe_game_sessions({ GameSessionId = game_session.GameSessionId })
+		local response, error_message = gamelift.DescribeGameSessionsSync(input)
 		if error_message or #response.GameSessions == 0 or response.GameSessions[1].Status == "ERROR" then
 			return nil, error_message or "STATUS: ERROR"
 		end
@@ -97,14 +98,15 @@ function init(self)
 
 	coroutine.wrap(function()
 		log.d("init - list aliases")
-		local response, error_message = gamelift.list_aliases({})
+		local response, error_message = gamelift.ListAliasesSync(gamelift.ListAliasesInput({}))
 		if error_message then
 			return
 		end
 		self.alias_id = response.Aliases[1].AliasId
 		print("AliasId", self.alias_id)
+		local input = gamelift.SearchGameSessionsInput({ AliasId = self.alias_id })
 		while true do
-			local response, error_message = gamelift.search_game_sessions({ AliasId = self.alias_id })
+			local response, error_message = gamelift.SearchGameSessionsSync(input)
 			if error_message then
 				return
 			end
@@ -127,10 +129,11 @@ function on_input(self, action_id, action)
 				log.d("joining")
 				coroutine.wrap(function()
 					show_popup("JOINING", "Joining game. Please wait.", { text = "Cancel", message_id = "cancel_join_game_session" })
-					local response, error_message = gamelift.join_game_session({
+					local input = gamelift.CreatePlayerSessionInput({
 						PlayerId = self.player.id,
 						GameSessionId = game.session.GameSessionId
 					})
+					local response, error_message = gamelift.CreatePlayerSessionSync(input)
 					if error_message then
 						show_popup("ERROR", "Unable to join game session", { text = "CLOSE", message_id = "close_popup" })
 					else

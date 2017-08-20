@@ -1,6 +1,9 @@
 local flow = require "ludobits.m.flow"
 local gamelift = require "aws-sdk.gamelift"
 local mock_gamelift = require "example.util.mock_gamelift"
+local aws_config = require "aws-sdk.core.config"
+
+aws_config.use_defold()
 
 
 function init(self)
