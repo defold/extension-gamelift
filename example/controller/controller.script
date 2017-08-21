@@ -1,9 +1,11 @@
 local flow = require "ludobits.m.flow"
 local gamelift = require "aws-sdk.gamelift"
 local mock_gamelift = require "example.util.mock_gamelift"
-local aws_config = require "aws-sdk.core.config"
+local config = require "aws-sdk.core.config"
+local credentials = require "aws-sdk.core.credentials"
 
-aws_config.use_defold()
+config.use_defold()
+credentials.set(sys.get_config("aws.access_key"), sys.get_config("aws.secret_access_key"))
 
 
 function init(self)
