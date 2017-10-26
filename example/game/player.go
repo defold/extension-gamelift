@@ -161,6 +161,7 @@ embedded_components {
   id: "spark_factory"
   type: "factory"
   data: "prototype: \"/example/game/spark.go\"\n"
+  "load_dynamically: false\n"
   ""
   position {
     x: 0.0
