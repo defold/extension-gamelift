@@ -1,0 +1,21 @@
+script: "/client/render/custom.render_script"
+materials {
+  name: "grid"
+  material: "/client/assets/materials/grid.material"
+}
+materials {
+  name: "composite"
+  material: "/client/assets/materials/composite.material"
+}
+materials {
+  name: "vectorstep"
+  material: "/client/assets/materials/vectorstep.material"
+}
+materials {
+  name: "downsample_comp"
+  material: "/client/assets/materials/downsample_comp.material"
+}
+materials {
+  name: "final"
+  material: "/client/assets/materials/final.material"
+}

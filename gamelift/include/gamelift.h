@@ -15,21 +15,9 @@ struct LuaListener {
 };
 
 
-class GameLiftWrapper {
-
-
-	static GameLiftWrapper* s_Instance;
-
-public:
-    struct LuaListener OnStartGameSessionListener;
-	struct LuaListener OnProcessTerminateListener;
-	struct LuaListener OnHealthCheckListener;
-
-	static GameLiftWrapper* GetInstance();
-	void Init(int port);
-	void OnStartGameSession(Aws::GameLift::Server::Model::GameSession myGameSession);
-	void OnProcessTerminate();
-	bool OnHealthCheck();
-
-
-};
+struct GameLiftWrapper {
+    int m_Port;
+    struct LuaListener m_OnStartGameSessionListener;
+	struct LuaListener m_OnProcessTerminateListener;
+	struct LuaListener m_OnHealthCheckListener;
+} g_GameLift;

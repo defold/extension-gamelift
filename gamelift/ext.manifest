@@ -1,1 +1,12 @@
 name: "Gamelift"
+
+platforms:
+    x86_64-osx:
+        context:
+            flags:      ["-std=c++0x", "-stdlib=libc++"]
+            libs:       ["c++"]
+
+    x86_64-win32:
+        context:
+            flags:      ["-std=c++0x", "-stdlib=libc++"]
+            libs:       ["c++"]

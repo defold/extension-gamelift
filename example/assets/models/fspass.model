@@ -1,8 +1,0 @@
-mesh: "/example/assets/models/fsquad.dae"
-material: "/example/assets/materials/fspass.material"
-textures: "/builtins/graphics/particle_blob.png"
-textures: "/builtins/graphics/particle_blob.png"
-skeleton: ""
-animations: ""
-default_animation: ""
-name: "unnamed"

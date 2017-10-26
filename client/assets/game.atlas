@@ -1,0 +1,45 @@
+images {
+  image: "/client/assets/images/black_hole.png"
+}
+images {
+  image: "/client/assets/images/bullet.png"
+}
+images {
+  image: "/client/assets/images/chaser.png"
+}
+images {
+  image: "/client/assets/images/geo_bg.png"
+}
+images {
+  image: "/client/assets/images/geo_pane.png"
+}
+images {
+  image: "/client/assets/images/light_mask.png"
+}
+images {
+  image: "/client/assets/images/line.png"
+}
+images {
+  image: "/client/assets/images/player.png"
+}
+images {
+  image: "/client/assets/images/roamer.png"
+}
+images {
+  image: "/client/assets/images/shrapnel.png"
+}
+images {
+  image: "/client/assets/images/space.png"
+}
+images {
+  image: "/client/assets/images/space_inlay.png"
+}
+images {
+  image: "/client/assets/images/swirler.png"
+}
+images {
+  image: "/client/assets/images/transparent1px.png"
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0

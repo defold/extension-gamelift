@@ -1,0 +1,66 @@
+local flow = require "ludobits.m.flow"
+local gamelift = require "aws-sdk.gamelift"
+local mock_gamelift = require "client.util.mock_gamelift"
+local config = require "aws-sdk.core.config"
+local credentials = require "aws-sdk.core.credentials"
+local cognito = require "aws-sdk.core.credentials.cognito"
+local aws_cognito = require "aws-sdk.cognito-identity"
+
+config.use_defold()
+
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	math.randomseed(os.time())
+
+
+	flow(function()
+		mock_gamelift.mock()
+		gamelift.init({
+			scheme = "https",
+			region = "eu-central-1",
+			--endpoint_override = "127.0.0.1:8080",
+		})
+		aws_cognito.init({
+			scheme = "https",
+			region = "eu-central-1",
+		})
+
+
+		credentials.provider(cognito.from_cognito_identity_pool("eu-central-1:0e6f69bb-8de7-4da4-b76c-4e5ce04af199"))
+		credentials.refresh_sync()
+		while true do
+			flow.load("#menuproxy")
+			local message_id, message = flow.until_message(hash("startgame"))
+			flow.unload("#menuproxy")
+			flow.load("#gameproxy")
+			msg.post("geometrywars:/game", "connect", { ip = message.ip, port = message.port, player_session_id = message.player_session_id })
+			flow.until_message(hash("gameover"), hash("disconnected"))
+			flow.unload("#gameproxy")
+		end
+	end)
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	flow.update(dt)
+end
+
+function on_message(self, message_id, message, sender)
+	flow.on_message(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
