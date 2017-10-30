@@ -94,26 +94,6 @@ void GameLift_OnStartGameSession(Aws::GameLift::Server::Model::GameSession myGam
 	assert(top == lua_gettop(L));
 }
 
-
-// static void test_onstart() {
-// 	Aws::GameLift::Server::Model::GameSession* session = new Aws::GameLift::Server::Model::GameSession();
-// 	session->SetFleetId("fleetid");
-// 	session->SetIpAddress("127.0.0.1");
-// 	session->SetMaximumPlayerSessionCount(10);
-// 	session->SetGameSessionId("gamesessionid");
-// 	session->SetPort(1234);
-// 	session->SetName("name");
-// 	Aws::GameLift::Server::Model::GameProperty *p1 = new Aws::GameLift::Server::Model::GameProperty();
-// 	Aws::GameLift::Server::Model::GameProperty *p2 = new Aws::GameLift::Server::Model::GameProperty();
-// 	p1->SetKey("key1");
-// 	p1->SetValue("value1");
-// 	p2->SetKey("key2");
-// 	p2->SetValue("value2");
-// 	session->AddGameProperties(*p1);
-// 	session->AddGameProperties(*p2);
-// 	GameLift_OnStartGameSession(*session);
-// }
-
 void GameLift_OnProcessTerminate() {
 	dmLogInfo("GameLift_OnProcessTerminate");
 	LuaListener listener = g_GameLift.m_OnProcessTerminateListener;

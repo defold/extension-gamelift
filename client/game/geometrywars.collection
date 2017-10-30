@@ -1,7 +1,7 @@
 name: "geometrywars"
 instances {
   id: "broadsock"
-  prototype: "/broadsock/broadsock.go"
+  prototype: "/broadsock/client/broadsock.go"
   position {
     x: 0.0
     y: 0.0

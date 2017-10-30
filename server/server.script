@@ -1,45 +1,11 @@
-local function on_health_check(self)
-	print("on_health_check")
-	return true
-end
+go.property("port", 5000)
 
-local function on_start_game_session(self, session)
-	print("on_start_game_session")
-	pprint(session)
-	gamelift.activate_game_session()
-end
-
-local function on_process_terminate(self)
-	print("on_process_terminate")
-	gamelift.terminate_game_session()
-	gamelift.process_ending()
-end
-
+local broadlift = require "server.broadlift"
 
 function init(self)
-	pprint(gamelift)
-	gamelift.init(5000, on_start_game_session, on_process_terminate, on_health_check)
-end
-
-function final(self)
+	broadlift.start(self.port)
 end
 
 function update(self, dt)
-	-- Add update code here
-	-- Remove this function if not needed
-end
-
-function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Remove this function if not needed
-end
-
-function on_input(self, action_id, action)
-	-- Add input-handling code here
-	-- Remove this function if not needed
-end
-
-function on_reload(self)
-	-- Add reload-handling code here
-	-- Remove this function if not needed
+	broadlift.update()
 end
