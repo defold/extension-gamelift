@@ -29,3 +29,5 @@ scale = 1.0
 [sprite]
 max_count = 1024
 
+[library]
+include_dirs = gamelift
