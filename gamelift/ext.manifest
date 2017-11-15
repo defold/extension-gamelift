@@ -6,7 +6,6 @@ platforms:
             flags:      ["-std=c++0x", "-stdlib=libc++"]
             libs:       ["c++"]
 
-    x86_64-win32:
+    x86_64-linux:
         context:
-            flags:      ["-std=c++0x", "-stdlib=libc++"]
-            libs:       ["c++"]
+            flags:      ["-std=c++0x"]
