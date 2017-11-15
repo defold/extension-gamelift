@@ -10,3 +10,8 @@ platforms:
         context:
             flags:      ["-std=c++0x", "-stdlib=libc++"]
             libs:       ["c++"]
+            
+    x86_64-linux:
+        context:
+            flags:      ["-std=c++0x", "-stdlib=libc++"]
+            libs:       ["c++"]
