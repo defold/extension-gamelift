@@ -9,132 +9,86 @@
 #include <dmsdk/sdk.h>
 #include <aws/gamelift/server/GameLiftServerAPI.h>
 #include "gamelift.h"
+#include "luautils.h"
 #include <stdlib.h>
 #include <string.h>
 
 
-static void printStack(lua_State* L) {
-	int n = lua_gettop(L);
-	for (int i = 1; i <= n; i++)  {
-		dmLogInfo("STACK %d %s %s", i, lua_tostring(L, i), luaL_typename(L, i));
-	}
-}
-
-
-static void PushTableStringString(lua_State* L, const char* key, const char* value) {
-	lua_pushstring(L, value);
-	lua_setfield(L, -2, key);
-}
-
-static void PushTableStringNumber(lua_State* L, const char* key, int value) {
-	lua_pushnumber(L, value);
-	lua_setfield(L, -2, key);
-}
-
-static void SetListener(struct LuaListener& listener, lua_State* L, int index) {
-	luaL_checktype(L, index, LUA_TFUNCTION);
-	lua_pushvalue(L, index);
-	int cb = dmScript::Ref(L, LUA_REGISTRYINDEX);
-
-	if (listener.m_Callback != LUA_NOREF) {
-		dmScript::Unref(listener.m_L, LUA_REGISTRYINDEX, listener.m_Callback);
-		dmScript::Unref(listener.m_L, LUA_REGISTRYINDEX, listener.m_Self);
-	}
-
-	listener.m_L = dmScript::GetMainThread(L);
-	listener.m_Callback = cb;
-	dmScript::GetInstance(L);
-	listener.m_Self = dmScript::Ref(L, LUA_REGISTRYINDEX);
-}
-
-static void PrepareForListenerInvocation(lua_State* L, struct LuaListener& listener) {
-	int top = lua_gettop(L);
-
-	// get the function callback from the registry and push it to the top of the stack
-	lua_rawgeti(L, LUA_REGISTRYINDEX, listener.m_Callback);
-	// get self from registry and push it to the top of the stack
-	lua_rawgeti(L, LUA_REGISTRYINDEX, listener.m_Self);
-	// push copy of self to top of the stack
-	lua_pushvalue(L, -1);
-	// set current script instance from top of the stack (and pop it)
-	dmScript::SetInstance(L);
-
-	assert(top + 2 == lua_gettop(L));
-}
-
 void GameLift_OnStartGameSession(Aws::GameLift::Server::Model::GameSession myGameSession) {
 	dmLogInfo("GameLift_OnStartGameSession");
-	LuaListener listener = g_GameLift.m_OnStartGameSessionListener;
-	lua_State* L = listener.m_L;
+	lua_State* L = g_GameLift.m_OnStartGameSessionListener.m_L;
 	int top = lua_gettop(L);
 
-	PrepareForListenerInvocation(L, listener);
+	lua_pushlistener(L, g_GameLift.m_OnStartGameSessionListener);
 
 	lua_createtable(L, 0, 7);
-	PushTableStringString(L, "name", myGameSession.GetName().c_str());
-	PushTableStringString(L, "game_session_id", myGameSession.GetGameSessionId().c_str());
-	PushTableStringNumber(L, "maximum_player_session_count", myGameSession.GetMaximumPlayerSessionCount());
-	PushTableStringString(L, "ip_address", myGameSession.GetIpAddress().c_str());
-	PushTableStringNumber(L, "port", myGameSession.GetPort());
-	PushTableStringString(L, "fleet_id", myGameSession.GetFleetId().c_str());
+	lua_pushtablestringstring(L, "name", myGameSession.GetName().c_str());
+	lua_pushtablestringstring(L, "game_session_id", myGameSession.GetGameSessionId().c_str());
+	lua_pushtablestringnumber(L, "maximum_player_session_count", myGameSession.GetMaximumPlayerSessionCount());
+	lua_pushtablestringstring(L, "ip_address", myGameSession.GetIpAddress().c_str());
+	lua_pushtablestringnumber(L, "port", myGameSession.GetPort());
+	lua_pushtablestringstring(L, "fleet_id", myGameSession.GetFleetId().c_str());
 
 	size_t size = myGameSession.GetGameProperties().size();
 	lua_createtable(L, 0, size);
 	for(int i=0; i < size; i++) {
 		const Aws::GameLift::Server::Model::GameProperty property = myGameSession.GetGameProperties().at(i);
-		PushTableStringString(L, property.GetKey().c_str(), property.GetValue().c_str());
+		lua_pushtablestringstring(L, property.GetKey().c_str(), property.GetValue().c_str());
 	}
 	lua_setfield(L, -2, "game_properties");
 
 	int ret = lua_pcall(L, 2, 0, 0);
 	if (ret != 0) {
 		dmLogError("Error while invoking start game session callback: %s", lua_tostring(L, -1));
-		lua_pop(L, 1);
+		lua_pop(L, 1); // pop error message
 	}
 	assert(top == lua_gettop(L));
 }
 
 void GameLift_OnProcessTerminate() {
 	dmLogInfo("GameLift_OnProcessTerminate");
-	LuaListener listener = g_GameLift.m_OnProcessTerminateListener;
-	lua_State* L = listener.m_L;
+	lua_State* L = g_GameLift.m_OnProcessTerminateListener.m_L;
 	int top = lua_gettop(L);
 
-	PrepareForListenerInvocation(L, listener);
+	lua_pushlistener(L, g_GameLift.m_OnProcessTerminateListener);
 	int ret = lua_pcall(L, 1, 0, 0);
 	if (ret != 0) {
 		dmLogError("Error while invoking process terminate callback: %s", lua_tostring(L, -1));
-		lua_pop(L, 1);
+		lua_pop(L, 1); // pop error message
 	}
 	assert(top == lua_gettop(L));
 }
 
 bool GameLift_OnHealthCheck() {
 	dmLogInfo("GameLift_OnHealthCheck");
-	LuaListener listener = g_GameLift.m_OnHealthCheckListener;
-	lua_State* L = listener.m_L;
+	lua_State* L = g_GameLift.m_OnHealthCheckListener.m_L;
 	int top = lua_gettop(L);
 
-	PrepareForListenerInvocation(L, listener);
+	lua_pushlistener(L, g_GameLift.m_OnHealthCheckListener);
+
+	int health = 0;
 	int ret = lua_pcall(L, 1, 1, 0);
 	if (ret != 0) {
 		dmLogError("Error while invoking health check callback: %s", lua_tostring(L, -1));
-		lua_pop(L, 1);
-		assert(top == lua_gettop(L));
-		return 0;
+		lua_pop(L, 1); // pop error message
 	}
-	assert(top + 1 == lua_gettop(L));
-	int health = lua_toboolean(L, 1);
+	else {
+		health = lua_toboolean(L, 1);
+	}
+	lua_pop(L, 1); // pop health check boolean
+	assert(top == lua_gettop(L));
 	return health;
 }
 
 
 static int InitGamelift(lua_State* L) {
+	dmLogInfo("InitGameLift");
 	int top = lua_gettop(L);
 	g_GameLift.m_Port = luaL_checknumber(L, 1);
-	SetListener(g_GameLift.m_OnStartGameSessionListener, L, 2);
-	SetListener(g_GameLift.m_OnProcessTerminateListener, L, 3);
-	SetListener(g_GameLift.m_OnHealthCheckListener, L, 4);
+
+	luaL_checklistener(L, 2, g_GameLift.m_OnStartGameSessionListener);
+	luaL_checklistener(L, 3, g_GameLift.m_OnProcessTerminateListener);
+	luaL_checklistener(L, 4, g_GameLift.m_OnHealthCheckListener);
 	dmLogInfo("InitGameLift %d", g_GameLift.m_Port);
 
 	auto initOutcome = Aws::GameLift::Server::InitSDK();
@@ -163,6 +117,7 @@ static int InitGamelift(lua_State* L) {
 	}
 
 	lua_pushboolean(L, 1);
+	dmLogInfo("InitGameLift - end");
 	assert(top + 1 == lua_gettop(L));
 	return 0;
 }
