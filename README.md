@@ -52,3 +52,6 @@ Notify the GameLift Server SDK that the game session has finished and can be ter
 
 #### gamelift.process_ending()
 Notify the GameLift Server SDK that the game server is shutting down. This results in a GameLift Server SDK call to ProcessEnding().
+
+## Updating the extension
+The extension is built from the Amazon Gamelift Server SDK. Download the latest version from the [official Amazon Gamelift page](https://aws.amazon.com/gamelift/getting-started/)
