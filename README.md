@@ -28,7 +28,7 @@ Initialize the extension and the GameLift Server SDK. This results in GameLift S
 Notify the GameLift Server SDK that the game session is ready to be activated. This function should be called as a result of callback to the ```on_start_game_session_listener``` function passed to a call to ```gamelift.init()```. This results in a GameLift Server SDK call to ActivateGameSession().
 
 #### gamelift.accept_player_session(session_id)
-Notify the GameLift Server SDK that the game server has accepted a connected player session. This results in a GameLift Server SDK call to AcceptPlayerSession().
+Notify the GameLift Server SDK that the game server has accepted a connected player session. This results in a GameLift Server SDK call to ```AcceptPlayerSession().```
 
 **PARAMETERS**
 * ```session_id``` (string) The player session id to accept.
@@ -38,7 +38,7 @@ Notify the GameLift Server SDK that the game server has accepted a connected pla
 * ```error``` (string) Error message if the operation failed, otherwise nil
 
 #### gamelift.remove_player_session(session_id)
-Notify the GameLift Server SDK that the game server has removed a connected player session. This results in a GameLift Server SDK call to RemovePlayerSession().
+Notify the GameLift Server SDK that the game server has removed a connected player session. This results in a GameLift Server SDK call to ```RemovePlayerSession()```.
 
 **PARAMETERS**
 * ```session_id``` (string) The player session id to remove.
@@ -48,10 +48,13 @@ Notify the GameLift Server SDK that the game server has removed a connected play
 * ```error``` (string) Error message if the operation failed, otherwise nil
 
 #### gamelift.terminate_game_session()
-Notify the GameLift Server SDK that the game session has finished and can be terminated. This results in a GameLift Server SDK call to TerminateGameSession().
+Notify the GameLift Server SDK that the game session has finished and can be terminated. This results in a GameLift Server SDK call to ```TerminateGameSession()```.
 
 #### gamelift.process_ending()
-Notify the GameLift Server SDK that the game server is shutting down. This results in a GameLift Server SDK call to ProcessEnding().
+Notify the GameLift Server SDK that the game server is shutting down. This results in a GameLift Server SDK call to ```ProcessEnding()```.
+
 
 ## Updating the extension
 The extension is built from the Amazon Gamelift Server SDK. Download the latest version from the [official Amazon Gamelift page](https://aws.amazon.com/gamelift/getting-started/)
+
+Build it using the provided instructions and with default settings. When the build has completed you need to copy the includes from `out/prefix/include` and the built libraries from `out/prefix/lib` to the `gamelift/include` and `gamelift/lib` folders in this extension.
