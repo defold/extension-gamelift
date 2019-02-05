@@ -83,6 +83,11 @@ bool GameLift_OnHealthCheck() {
 
 static int InitGamelift(lua_State* L) {
 	dmLogInfo("InitGameLift");
+	auto versionOutcome = Aws::GameLift::Server::GetSdkVersion();
+	if (versionOutcome.IsSuccess()) {
+		dmLogInfo("Using GameLift Server SDK version %s", versionOutcome.GetResult().c_str());
+	}
+
 	int top = lua_gettop(L);
 	g_GameLift.m_Port = luaL_checknumber(L, 1);
 
