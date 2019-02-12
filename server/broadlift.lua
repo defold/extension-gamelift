@@ -81,6 +81,7 @@ function M.start(port)
 	log("start", port)
 	start(port)
 	gamelift.init(port, on_start_game_session, on_process_terminate, on_health_check)
+	gamelift.process_ready()
 end
 
 
