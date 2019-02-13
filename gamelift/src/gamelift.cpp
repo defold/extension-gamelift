@@ -105,6 +105,17 @@ static int InitGamelift(lua_State* L) {
 		return false;
 	}
 
+	lua_pushboolean(L, 1);
+	dmLogInfo("InitGameLift - end");
+	assert(top + 1 == lua_gettop(L));
+	return 0;
+}
+
+static int ProcessReady(lua_State* L) {
+	dmLogInfo("ProcessReady");
+
+	int top = lua_gettop(L);
+
 	auto processReadyParameter = Aws::GameLift::Server::ProcessParameters(
 		std::bind(&GameLift_OnStartGameSession, std::placeholders::_1),
 		std::bind(&GameLift_OnProcessTerminate),
@@ -114,15 +125,15 @@ static int InitGamelift(lua_State* L) {
 	);
 	auto readyOutcome = Aws::GameLift::Server::ProcessReady(processReadyParameter);
 	if (!readyOutcome.IsSuccess()) {
-		dmLogError("Unable to initialize GameLift SDK %s", readyOutcome.GetError().GetErrorMessage().c_str());
+		dmLogError("Unable to start process %s", readyOutcome.GetError().GetErrorMessage().c_str());
 		lua_pushboolean(L, 0);
-		lua_pushstring(L, initOutcome.GetError().GetErrorMessage().c_str());
+		lua_pushstring(L, readyOutcome.GetError().GetErrorMessage().c_str());
 		assert(top + 2 == lua_gettop(L));
 		return false;
 	}
 
 	lua_pushboolean(L, 1);
-	dmLogInfo("InitGameLift - end");
+	dmLogInfo("ProcessReady - end");
 	assert(top + 1 == lua_gettop(L));
 	return 0;
 }
@@ -175,6 +186,7 @@ static int AcceptPlayerSession(lua_State* L) {
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] = {
 	{"init", InitGamelift},
+	{"process_ready", ProcessReady},
 	{"activate_game_session", ActivateGameSession},
 	{"terminate_game_session", TerminateGameSession},
 	{"process_ending", ProcessEnding},
