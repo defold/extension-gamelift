@@ -73,9 +73,9 @@ bool GameLift_OnHealthCheck() {
 		lua_pop(L, 1); // pop error message
 	}
 	else {
-		health = lua_toboolean(L, 1);
+		health = lua_toboolean(L, -1);
+		lua_pop(L, 1); // pop health check boolean
 	}
-	lua_pop(L, 1); // pop health check boolean
 	assert(top == lua_gettop(L));
 	return health;
 }
