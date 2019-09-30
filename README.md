@@ -4,9 +4,9 @@ Amazon GameLift extension for the Defold game engine. Run Defold on the server w
 ## Installation
 You can use the GameLift extension in your own project by adding this project as a [Defold library dependency](http://www.defold.com/manuals/libraries/). Open your game.project file and in the dependencies field under project add:
 
-	https://github.com/britzl/defold-gamelift/archive/master.zip
+	https://github.com/defold/extension-gamelift/archive/master.zip
 
-Or point to the ZIP file of a [specific release](https://github.com/britzl/defold-gamelift/releases).
+Or point to the ZIP file of a [specific release](https://github.com/defold/extension-gamelift/releases).
 
 ## Usage
 Once you have the extension added to your project you can proceed to write your server and interface with the Amazon GameLift server SDK. The following functions are exposed to Lua via the extension:
