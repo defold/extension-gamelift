@@ -1,4 +1,4 @@
-# Defold GameLift
+GameLift
 Amazon GameLift extension for the Defold game engine. Run Defold on the server with GameLift SDK support!
 
 ## Installation
