@@ -17,7 +17,7 @@ end
 local function sleep(seconds)
 	local co = coroutine.running()
 	if timer then
-		timer.seconds(seconds, function()
+		timer.delay(seconds, false, function()
 			coroutine.resume(co)
 		end)
 	else

@@ -103,7 +103,7 @@ function M.mock()
 		local output = {
 			GameSessions = game_sessions
 		}
-		timer.seconds(0.1, function()
+		timer.delay(0.1, false, function()
 			cb(output)
 		end)
 	end
@@ -122,7 +122,7 @@ function M.mock()
 					}).all
 			}
 		}
-		timer.seconds(0.1, function()
+		timer.delay(0.1, false, function()
 			cb(output)
 		end)
 	end
@@ -143,7 +143,7 @@ function M.mock()
 		local output = {
 			GameSession = game_session
 		}
-		timer.seconds(0.1, function()
+		timer.delay(0.1, false, function()
 			cb(output)
 		end)
 	end
@@ -159,7 +159,7 @@ function M.mock()
 				game_session
 			}
 		}
-		timer.seconds(0.1, function()
+		timer.delay(0.1, false, function()
 			cb(output)
 		end)
 	end
@@ -176,7 +176,7 @@ function M.mock()
 				PlayerData = input.all.PlayerData
 			})
 		}
-		timer.seconds(0.1, function()
+		timer.delay(0.1, false, function()
 			cb(output)
 		end)
 	end
