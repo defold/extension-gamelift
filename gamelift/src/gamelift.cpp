@@ -1,4 +1,4 @@
-// Extension lib defines
+// Extension library defines
 #define LIB_NAME "Gamelift"
 #define MODULE_NAME "gamelift"
 
@@ -226,7 +226,7 @@ dmExtension::Result FinalizeGameliftExtension(dmExtension::Params* params) {
 
 
 // Defold SDK uses a macro for setting up extension entry points:
-//
+
 // DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)
 
 DM_DECLARE_EXTENSION(Gamelift, LIB_NAME, AppInitializeGameliftExtension, AppFinalizeGameliftExtension, InitializeGameliftExtension, 0, 0, FinalizeGameliftExtension)
