@@ -23,7 +23,7 @@ function init(self)
 		z = q.z / t
 		local r = z*angle
 		local sprite_url = msg.url(nil, self.force_go, "sprite")
-		sprite.set_constant(sprite_url, "rotation", vmath.vector4(r, 100, 0, 0))
+		go.set(sprite_url, "rotation", vmath.vector4(r, 100, 0, 0))
 	end
 end
 

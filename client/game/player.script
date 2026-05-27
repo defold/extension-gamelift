@@ -99,7 +99,7 @@ function update(self, dt)
 		z = q.z / t
 		local r = z*angle
 		local sprite_url = msg.url(nil, self.engine_force_go, "sprite")
-		sprite.set_constant(sprite_url, "rotation", vmath.vector4(r, dx, dy, 0))
+		go.set(sprite_url, "rotation", vmath.vector4(r, dx, dy, 0))
 	end
 	
 	

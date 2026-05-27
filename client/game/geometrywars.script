@@ -9,8 +9,8 @@ local ROAMER_DIED = hash("roamer_died")
 
 
 
-local WIDTH = tonumber(sys.get_config("display.width"))
-local HEIGHT = tonumber(sys.get_config("display.height"))
+local WIDTH = sys.get_config_int("display.width")
+local HEIGHT = sys.get_config_int("display.height")
 local function random_position()
 	return vmath.vector3(math.random(WIDTH), math.random(HEIGHT), 0)
 end
@@ -34,7 +34,7 @@ local function explosion(self, p)
 	local o = factory.create("/factories#force", p)
 	
 	local sprite_url = msg.url(nil, o, "sprite")
-	sprite.set_constant(sprite_url, "rotation", vmath.vector4(1, 5, 0, 0))
+	go.set(sprite_url, "rotation", vmath.vector4(1, 5, 0, 0))
 	go.set_scale(vmath.vector3(0.1), o)
 	go.animate(o, "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(0.3), go.EASING_OUTCIRC, 0.3, 0, function()
 		go.delete(o)

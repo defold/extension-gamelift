@@ -1,8 +1,14 @@
-mesh: "/client/assets/models/fsquad.dae"
-material: "/client/assets/materials/fspass.material"
-textures: "/builtins/graphics/particle_blob.png"
-textures: "/builtins/graphics/particle_blob.png"
-skeleton: ""
-animations: ""
-default_animation: ""
+mesh: "/builtins/assets/gltf/quad.gltf"
 name: "unnamed"
+materials {
+  name: "default"
+  material: "/client/assets/materials/fspass.material"
+  textures {
+    sampler: "tex0"
+    texture: "/builtins/graphics/particle_blob.png"
+  }
+  textures {
+    sampler: "tex1"
+    texture: "/builtins/graphics/particle_blob.png"
+  }
+}

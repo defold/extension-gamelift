@@ -1,4 +1,4 @@
-local uuid = require "client.util..uuid"
+local uuid = require "client.util.uuid"
 uuid.seed()
 
 local function generate()

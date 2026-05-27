@@ -1,8 +1,8 @@
 go.property("remote", true)
 go.property("speed", 100)
 
-local WIDTH = tonumber(sys.get_config("display.width"))
-local HEIGHT = tonumber(sys.get_config("display.height"))
+local WIDTH = sys.get_config_int("display.width")
+local HEIGHT = sys.get_config_int("display.height")
 
 local TRIGGER_RESPONSE = hash("trigger_response")
 
